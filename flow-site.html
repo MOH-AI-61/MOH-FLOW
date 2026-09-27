@@ -1,4 +1,4 @@
-<title>FLOW Product System</title>
+<title>FLOW Terminal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Outfit:wght@200;300;400&family=JetBrains+Mono:wght@400;500;700&display=swap">
@@ -6,439 +6,441 @@
 
 <style>
   :root{
-    color-scheme: dark;
-    --void:#030608;
-    --deep:#060B0E;
-    --glass:rgba(7,15,19,.66);
-    --line:rgba(0,212,230,.18);
-    --line-2:rgba(0,212,230,.34);
-    --ink:#DEEAEC;
-    --ink-2:#8DA2A7;
-    --ink-3:#556A6F;
+    color-scheme:dark;
+    --void:#020508;
+    --glass:rgba(5,12,16,.62);
+    --glass-2:rgba(6,15,20,.86);
+    --hair:rgba(0,212,230,.20);
+    --hair-2:rgba(0,212,230,.44);
+    --ink:#DDEBED;
+    --ink-2:#8AA1A6;
+    --ink-3:#4E6469;
     --cyan:#00D4E6;
     --lime:#CDF000;
     --pink:#FF2D9A;
     --violet:#7A2CFF;
     --grad:linear-gradient(105deg,var(--lime),var(--cyan));
-
     --display:"Chakra Petch",system-ui,sans-serif;
     --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
     --body:"Outfit",system-ui,-apple-system,sans-serif;
+    --pad:clamp(16px,3.2vw,46px);
   }
   *{box-sizing:border-box}
-
+  html,body{height:100%}
   body{
     margin:0;background:var(--void);color:var(--ink);
-    font-family:var(--body);font-weight:300;font-size:16px;line-height:1.7;
-    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+    font-family:var(--body);font-weight:300;line-height:1.66;
+    -webkit-font-smoothing:antialiased;overflow:hidden;
   }
-  a{color:var(--cyan)}
-  :focus-visible{outline:1px solid var(--cyan);outline-offset:3px}
+  ::selection{background:var(--cyan);color:#001015}
 
-  /* ══ fixed atmosphere ══ */
-  #field{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.66}
+  /* ═════ volumetric backdrop ═════ */
+  #bg{position:fixed;inset:0;z-index:0;display:block}
+  .haze{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(60% 45% at 18% 22%,rgba(205,240,0,.10),transparent 68%),
+      radial-gradient(58% 48% at 82% 74%,rgba(0,212,230,.13),transparent 70%),
+      radial-gradient(130% 88% at 50% 45%,transparent 32%,rgba(2,5,8,.90) 100%);
+  }
   .scan{
-    position:fixed;inset:0;z-index:40;pointer-events:none;
-    background:repeating-linear-gradient(to bottom,rgba(0,212,230,.030) 0 1px,transparent 1px 3px);
+    position:fixed;inset:0;z-index:38;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(0,212,230,.034) 0 1px,transparent 1px 3px);
   }
-  .vig{
-    position:fixed;inset:0;z-index:39;pointer-events:none;
-    background:radial-gradient(125% 82% at 50% 38%,transparent 38%,rgba(2,5,7,.82) 100%);
-  }
-  main,nav,header,footer{position:relative;z-index:2}
 
-  /* ══ HUD corner brackets ══ */
-  .hud{position:relative}
-  .hud::before,.hud::after,
-  .hud > .cnr::before,.hud > .cnr::after{
-    content:"";position:absolute;width:13px;height:13px;
-    border:1px solid var(--line-2);pointer-events:none;z-index:3;
+  /* ═════ fixed HUD frame ═════ */
+  .frame{position:fixed;inset:0;z-index:36;pointer-events:none}
+  .frame i{position:absolute;width:26px;height:26px;border:1px solid var(--hair-2)}
+  .frame .tl{top:calc(10px + env(safe-area-inset-top,0px));left:10px;border-right:0;border-bottom:0}
+  .frame .tr{top:calc(10px + env(safe-area-inset-top,0px));right:10px;border-left:0;border-bottom:0}
+  .frame .bl{bottom:calc(10px + env(safe-area-inset-bottom,0px));left:10px;border-right:0;border-top:0}
+  .frame .br{bottom:calc(10px + env(safe-area-inset-bottom,0px));right:10px;border-left:0;border-top:0}
+  .frame .ticks{
+    position:absolute;left:10px;right:10px;top:50%;height:1px;
+    background:repeating-linear-gradient(90deg,var(--hair) 0 1px,transparent 1px 26px);
+    opacity:.5;
   }
-  .hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
-  .hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
-  .hud > .cnr::before{top:-1px;right:-1px;border-left:0;border-bottom:0}
-  .hud > .cnr::after{bottom:-1px;left:-1px;border-right:0;border-top:0}
 
-  /* ══ nav ══ */
-  nav{
-    position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
-    background:rgba(3,6,8,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    border-bottom:1px solid var(--line);
+  .reticle{
+    position:fixed;z-index:37;width:30px;height:30px;margin:-15px 0 0 -15px;
+    pointer-events:none;opacity:0;transition:opacity .3s;
   }
-  .nav-in{max-width:1220px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-  .mark{
-    font-family:var(--display);font-weight:700;font-size:19px;font-style:italic;
-    letter-spacing:.05em;background:var(--grad);
-    -webkit-background-clip:text;background-clip:text;color:transparent;flex:none;
+  .reticle::before,.reticle::after{content:"";position:absolute;background:var(--hair-2)}
+  .reticle::before{left:0;right:0;top:50%;height:1px}
+  .reticle::after{top:0;bottom:0;left:50%;width:1px}
+  .reticle span{position:absolute;inset:9px;border:1px solid var(--cyan);border-radius:50%;opacity:.7}
+  @media (hover:hover) and (pointer:fine){ .reticle.on{opacity:.75} }
+
+  /* ═════ top bar ═════ */
+  .bar{
+    position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:34;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    padding:12px var(--pad) 10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);pointer-events:none;
   }
-  .readout{
-    font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-3);
-    display:flex;gap:14px;flex-wrap:wrap;
+  .bar .mark{
+    font-family:var(--display);font-weight:700;font-style:italic;font-size:17px;letter-spacing:.04em;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-transform:none;
   }
-  .readout b{color:var(--cyan);font-weight:500}
-  .dot{
+  .bar b{color:var(--cyan);font-weight:500}
+  .bar .sp{margin-inline-start:auto}
+  .led{
     display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--lime);
-    margin-inline-end:6px;vertical-align:middle;animation:blip 2.2s ease-in-out infinite;
+    margin-inline-end:6px;vertical-align:middle;animation:blip 2.4s ease-in-out infinite;
   }
-  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
-  .nav-links{display:flex;gap:2px;flex-wrap:wrap;margin-inline-start:auto}
-  .nav-links a{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
-    color:var(--ink-3);text-decoration:none;padding:6px 10px;
-    border:1px solid transparent;transition:.16s;
-  }
-  .nav-links a:hover{color:var(--cyan);border-color:var(--line)}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
 
-  .wrap{max-width:1220px;margin:0 auto;padding-inline:20px}
+  /* ═════ deck ═════ */
+  #app{position:relative;height:100%;z-index:10}
+  .deck{position:absolute;inset:0}
+  .slide{
+    padding:calc(56px + env(safe-area-inset-top,0px)) var(--pad) calc(74px + env(safe-area-inset-bottom,0px));
+  }
+  .deck.ready .slide{
+    position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+    opacity:0;visibility:hidden;transform:translateY(14px) scale(.995);
+    transition:opacity .42s ease,transform .42s cubic-bezier(.2,.8,.3,1),visibility 0s .42s;
+  }
+  .deck.ready .slide.live{
+    opacity:1;visibility:visible;transform:none;transition-delay:0s;
+  }
+  .deck.glitch{animation:gfx .3s steps(2)}
+  @keyframes gfx{
+    0%{filter:none;transform:none}
+    33%{filter:hue-rotate(35deg) saturate(1.5);transform:translateX(-3px) skewX(.5deg)}
+    66%{filter:hue-rotate(-30deg) saturate(1.3);transform:translateX(3px) skewX(-.4deg)}
+    100%{filter:none;transform:none}
+  }
 
-  /* ══ hero ══ */
-  header.hero{
-    position:relative;overflow:hidden;min-height:clamp(560px,86vh,780px);
-    display:flex;align-items:center;border-bottom:1px solid var(--line);
+  .grid2{
+    display:grid;grid-template-columns:1.06fr .94fr;gap:clamp(20px,3vw,44px);
+    align-items:center;max-width:1320px;margin:0 auto;min-height:100%;
   }
-  .hero-bg{
-    position:absolute;inset:0;
-    background:url(img/bg-city.jpg) center/cover no-repeat;
-    filter:saturate(1.15) contrast(1.05);
-  }
-  .hero-bg::after{
-    content:"";position:absolute;inset:0;
-    background:linear-gradient(100deg,rgba(3,6,8,.95) 0%,rgba(3,6,8,.72) 46%,rgba(3,6,8,.34) 100%);
-  }
-  .hero-in{position:relative;width:100%;padding-block:64px}
+  @media (max-width:900px){ .grid2{grid-template-columns:1fr;align-items:start} }
 
-  .eyebrow{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;
-    color:var(--cyan);margin:0 0 18px;
+  /* ═════ headings ═════ */
+  .idx{
+    display:flex;align-items:center;gap:12px;margin-bottom:14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
   }
+  .idx .n{background:var(--grad);color:#001015;padding:3px 9px;font-weight:700}
+  .idx .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--hair-2),transparent)}
   h1{
     font-family:var(--display);font-weight:700;text-transform:uppercase;
-    font-size:clamp(2.8rem,8.6vw,5.9rem);line-height:.92;letter-spacing:-.022em;
-    margin:0 0 20px;text-wrap:balance;
+    font-size:clamp(2.6rem,8vw,6rem);line-height:.9;letter-spacing:-.025em;margin:0 0 18px;
   }
-  .glitch{position:relative;display:inline-block;
-    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .glitch::before,.glitch::after{
-    content:attr(data-t);position:absolute;inset:0;
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    clip-path:inset(0 0 60% 0);
-  }
-  .glitch::before{background:linear-gradient(105deg,#FF2D9A,#7A2CFF);animation:gl1 4.6s steps(1) infinite}
-  .glitch::after{background:linear-gradient(105deg,#00D4E6,#CDF000);animation:gl2 4.6s steps(1) infinite}
-  @keyframes gl1{
-    0%,88%,100%{transform:none;opacity:0}
-    89%{transform:translate(-3px,1px);opacity:.85;clip-path:inset(12% 0 58% 0)}
-    92%{transform:translate(2px,-2px);opacity:.7;clip-path:inset(62% 0 14% 0)}
-    95%{transform:none;opacity:0}
-  }
-  @keyframes gl2{
-    0%,90%,100%{transform:none;opacity:0}
-    91%{transform:translate(3px,-1px);opacity:.8;clip-path:inset(40% 0 34% 0)}
-    94%{transform:translate(-2px,2px);opacity:.6;clip-path:inset(8% 0 72% 0)}
-    97%{transform:none;opacity:0}
-  }
-  .lede{font-size:clamp(1rem,2.2vw,1.2rem);color:var(--ink-2);max-width:52ch;margin:0 0 32px;line-height:1.6}
-
-  .stats{display:flex;flex-wrap:wrap;gap:10px}
-  .stat{
-    flex:1 1 138px;padding:13px 16px;background:var(--glass);
-    border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  }
-  .stat b{display:block;font-family:var(--display);font-weight:600;font-size:1.44rem;line-height:1.2}
-  .stat span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-
-  /* ══ cinematic band ══ */
-  .cine{
-    position:relative;height:clamp(230px,34vw,360px);overflow:hidden;
-    border-block:1px solid var(--line);display:flex;align-items:flex-end;
-  }
-  .cine .ph{position:absolute;inset:0;background-position:center;background-size:cover;filter:saturate(1.12)}
-  .cine::after{
-    content:"";position:absolute;inset:0;
-    background:linear-gradient(to top,rgba(3,6,8,.97) 4%,rgba(3,6,8,.30) 62%,rgba(3,6,8,.55) 100%);
-  }
-  .cine-txt{position:relative;z-index:2;padding:0 20px 20px;max-width:1220px;margin:0 auto;width:100%}
-  .cine-txt p{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--cyan);margin:0;
-  }
-  .cine-txt h4{
-    font-family:var(--display);font-weight:600;text-transform:uppercase;
-    font-size:clamp(1.3rem,3.6vw,2.2rem);margin:4px 0 0;line-height:1.05;letter-spacing:-.01em;
-  }
-
-  /* ══ sections ══ */
-  section.model{padding-block:64px}
-  .idline{
-    display:flex;align-items:center;gap:12px;margin-bottom:16px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);
-  }
-  .idline .no{color:var(--void);background:var(--grad);padding:3px 9px;font-weight:700}
-  .idline .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line-2),transparent)}
   h2{
     font-family:var(--display);font-weight:600;text-transform:uppercase;
-    font-size:clamp(1.9rem,4.8vw,3.1rem);line-height:1.02;letter-spacing:-.018em;margin:0 0 14px;
+    font-size:clamp(1.8rem,5vw,3.3rem);line-height:.98;letter-spacing:-.02em;margin:0 0 14px;
   }
-  .sub{color:var(--ink-2);max-width:62ch;margin:0 0 32px;font-size:1.02rem}
-  h3{
-    font-family:var(--display);font-weight:600;font-size:1rem;letter-spacing:.07em;
-    text-transform:uppercase;margin:0 0 14px;color:var(--cyan);
+  .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .glitchy{position:relative;display:inline-block}
+  .glitchy::before,.glitchy::after{
+    content:attr(data-t);position:absolute;inset:0;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .split{display:grid;grid-template-columns:1.08fr .92fr;gap:34px;align-items:start}
-  @media (max-width:880px){.split{grid-template-columns:1fr;gap:28px}}
+  .glitchy::before{background:linear-gradient(105deg,#FF2D9A,#7A2CFF);animation:g1 5.4s steps(1) infinite}
+  .glitchy::after{background:linear-gradient(105deg,#00D4E6,#CDF000);animation:g2 5.4s steps(1) infinite}
+  @keyframes g1{
+    0%,86%,100%{opacity:0;transform:none}
+    87%{opacity:.9;transform:translate(-4px,1px);clip-path:inset(14% 0 56% 0)}
+    90%{opacity:.7;transform:translate(3px,-2px);clip-path:inset(58% 0 16% 0)}
+    93%{opacity:0}
+  }
+  @keyframes g2{
+    0%,88%,100%{opacity:0;transform:none}
+    89%{opacity:.85;transform:translate(4px,-1px);clip-path:inset(38% 0 36% 0)}
+    92%{opacity:.6;transform:translate(-3px,2px);clip-path:inset(6% 0 74% 0)}
+    95%{opacity:0}
+  }
+  .lede{font-size:clamp(.98rem,1.9vw,1.14rem);color:var(--ink-2);max-width:54ch;margin:0 0 26px}
 
-  /* ══ product stage ══ */
-  .stage{
-    position:relative;overflow:hidden;
-    background:var(--glass);border:1px solid var(--line);
-    padding:22px;min-height:340px;
-    display:flex;align-items:center;justify-content:center;
-    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  /* ═════ panels ═════ */
+  .panel{
+    position:relative;background:var(--glass);border:1px solid var(--hair);
+    backdrop-filter:blur(11px);-webkit-backdrop-filter:blur(11px);padding:18px;
   }
-  .stage.light{background:rgba(232,242,243,.94)}
-  .stage img{max-width:100%;max-height:410px;height:auto;display:block;position:relative;z-index:2}
-  .stage .frame{display:none}
-  .stage .frame.on{display:block}
-  .sweep{
-    position:absolute;left:0;right:0;height:34%;z-index:3;pointer-events:none;
-    background:linear-gradient(to bottom,transparent,rgba(0,212,230,.14),rgba(205,240,0,.10),transparent);
-    animation:sweep 5.2s linear infinite;
+  .panel::before,.panel::after,.panel>.cnr::before,.panel>.cnr::after{
+    content:"";position:absolute;width:11px;height:11px;border:1px solid var(--hair-2);pointer-events:none;
   }
-  @keyframes sweep{0%{top:-40%}100%{top:106%}}
-  .grid-bg{
-    position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+  .panel::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .panel::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+  .panel>.cnr::before{top:-1px;right:-1px;border-left:0;border-bottom:0}
+  .panel>.cnr::after{bottom:-1px;left:-1px;border-right:0;border-top:0}
+  .plabel{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cyan);margin:0 0 12px;
+  }
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px}
+  .stat b{display:block;font-family:var(--display);font-weight:600;font-size:1.34rem;line-height:1.2}
+  .stat span{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3)}
+
+  /* ═════ hologram stage ═════ */
+  .holo{
+    position:relative;overflow:hidden;border:1px solid var(--hair);
+    background:radial-gradient(70% 70% at 50% 42%,rgba(0,212,230,.07),transparent 72%),var(--glass);
+    min-height:clamp(280px,44vh,440px);
+    display:flex;align-items:center;justify-content:center;padding:18px;
+  }
+  .holo .mesh{
+    position:absolute;inset:0;pointer-events:none;opacity:.55;
     background-image:
-      linear-gradient(rgba(0,212,230,.08) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,212,230,.08) 1px,transparent 1px);
-    background-size:34px 34px;
+      linear-gradient(rgba(0,212,230,.09) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,212,230,.09) 1px,transparent 1px);
+    background-size:30px 30px;
+    mask-image:radial-gradient(75% 75% at 50% 50%,#000 30%,transparent 78%);
+    -webkit-mask-image:radial-gradient(75% 75% at 50% 50%,#000 30%,transparent 78%);
   }
-  .stage.light .grid-bg{opacity:.35;background-image:
-      linear-gradient(rgba(0,120,140,.10) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,120,140,.10) 1px,transparent 1px)}
+  .holo .beam{
+    position:absolute;left:-10%;right:-10%;height:30%;pointer-events:none;
+    background:linear-gradient(to bottom,transparent,rgba(0,212,230,.16),rgba(205,240,0,.11),transparent);
+    animation:beam 5.6s linear infinite;
+  }
+  @keyframes beam{0%{top:-34%}100%{top:108%}}
+  .holo .hbars{
+    position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:repeating-linear-gradient(to bottom,rgba(0,0,0,.20) 0 2px,transparent 2px 5px);
+    mix-blend-mode:multiply;
+  }
+  .holo img{
+    max-width:100%;max-height:clamp(230px,38vh,400px);height:auto;display:block;position:relative;z-index:3;
+    filter:drop-shadow(0 0 22px rgba(0,212,230,.35));
+    animation:flick 7s steps(1) infinite;
+  }
+  @keyframes flick{
+    0%,96%,100%{opacity:1}
+    97%{opacity:.86}
+    98%{opacity:1}
+    99%{opacity:.92}
+  }
+  .holo .frame-img{display:none}
+  .holo .frame-img.on{display:block}
+  .holo .plinth{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    width:62%;height:16px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(0,212,230,.34),transparent);
+    filter:blur(2px);
+  }
+  .holo.pale{background:radial-gradient(72% 72% at 50% 42%,rgba(224,241,244,.96),rgba(191,216,221,.90) 74%)}
+  .holo.pale img{filter:none;animation:none;mix-blend-mode:multiply}
+  .holo.pale .hbars{opacity:.16}
+  .holo.pale .mesh{opacity:.3;background-image:
+    linear-gradient(rgba(0,110,130,.13) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,110,130,.13) 1px,transparent 1px)}
 
   .controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   button.chip{
-    font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
-    color:var(--ink-2);background:rgba(8,18,22,.8);border:1px solid var(--line);
-    padding:7px 12px;cursor:pointer;transition:.15s;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink-2);background:rgba(6,16,21,.86);border:1px solid var(--hair);
+    padding:7px 11px;cursor:pointer;transition:.15s;
   }
-  button.chip:hover{color:var(--cyan);border-color:var(--line-2)}
-  button.chip[aria-pressed="true"]{background:var(--grad);color:var(--void);border-color:transparent;font-weight:700}
-  button.chip.pink[aria-pressed="true"]{background:linear-gradient(105deg,var(--pink),var(--violet));color:#fff}
-  .hint{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:10px 0 0}
+  button.chip:hover{color:var(--cyan);border-color:var(--hair-2)}
+  button.chip[aria-pressed="true"]{background:var(--grad);color:#001015;border-color:transparent;font-weight:700}
+  button.chip.alt[aria-pressed="true"]{background:linear-gradient(105deg,var(--pink),var(--violet));color:#fff}
 
-  /* ══ spec readout ══ */
-  dl.spec{margin:0;border-top:1px solid var(--line)}
+  /* ═════ spec readout ═════ */
+  dl.spec{margin:0;max-height:min(46vh,430px);overflow-y:auto}
   dl.spec > div{
-    display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;
-    padding:10px 10px;border-bottom:1px solid var(--line);
-    transition:background .16s;
+    display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline;
+    padding:7px 4px;border-bottom:1px solid rgba(0,212,230,.10);
   }
-  dl.spec > div:hover{background:rgba(0,212,230,.045)}
-  dl.spec dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
-  dl.spec dd{margin:0;text-align:end;font-family:var(--mono);font-size:.84rem;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.45}
-  dl.spec dd em{font-style:normal;color:var(--ink-3);font-size:.76rem;display:block}
+  dl.spec > div:hover{background:rgba(0,212,230,.05)}
+  dl.spec dt{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  dl.spec dd{margin:0;text-align:end;font-family:var(--mono);font-size:.79rem;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.4}
+  dl.spec dd em{font-style:normal;color:var(--ink-3);font-size:.72rem;display:block}
 
   ul.feat{list-style:none;margin:0;padding:0}
-  ul.feat li{position:relative;padding-inline-start:22px;margin-bottom:11px;color:var(--ink-2);font-size:.95rem;line-height:1.58}
-  ul.feat li::before{
-    content:"";position:absolute;inset-inline-start:0;top:.55em;
-    width:8px;height:8px;border:1px solid var(--cyan);transform:rotate(45deg);
-  }
+  ul.feat li{position:relative;padding-inline-start:20px;margin-bottom:9px;color:var(--ink-2);font-size:.9rem;line-height:1.54}
+  ul.feat li::before{content:"";position:absolute;inset-inline-start:0;top:.5em;width:7px;height:7px;border:1px solid var(--cyan);transform:rotate(45deg)}
   ul.feat b{color:var(--ink);font-weight:400}
 
-  /* ══ holographic fabric stack ══ */
-  .stack-wrap{perspective:1200px;padding:38px 0 14px;display:flex;justify-content:center}
-  .stack{
-    position:relative;width:min(300px,76vw);height:196px;transform-style:preserve-3d;
-    transform:rotateX(58deg) rotateZ(-36deg);
-    animation:drift 16s ease-in-out infinite;
+  .term{
+    font-family:var(--mono);font-size:10.5px;line-height:1.85;color:var(--ink-2);
+    white-space:pre-wrap;margin:0;min-height:8.6em;
   }
-  @keyframes drift{
-    0%,100%{transform:rotateX(58deg) rotateZ(-36deg)}
-    50%{transform:rotateX(50deg) rotateZ(-24deg)}
-  }
-  .stack-wrap:hover .stack{animation-play-state:paused}
-  .layer{
-    position:absolute;inset:0;border:1px solid rgba(0,212,230,.55);
-    transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.75,.3,1);
-    display:flex;align-items:flex-end;padding:9px 12px;
-    box-shadow:0 0 22px rgba(0,212,230,.14) inset;
-  }
-  .layer span{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
-  .l1{background:linear-gradient(115deg,rgba(205,240,0,.82),rgba(0,212,230,.78));transform:translateZ(92px)}
-  .l1 span{color:rgba(0,0,0,.76)}
-  .l2{background:linear-gradient(115deg,rgba(143,184,10,.55),rgba(15,163,178,.55));transform:translateZ(61px)}
-  .l2 span{color:rgba(255,255,255,.9)}
-  .l3{background:linear-gradient(115deg,rgba(61,90,24,.5),rgba(17,108,119,.5));transform:translateZ(30px)}
-  .l3 span{color:rgba(255,255,255,.85)}
-  .l4{background:rgba(222,234,236,.28);transform:translateZ(0)}
-  .l4 span{color:rgba(255,255,255,.92)}
-  .stack-wrap:hover .l1{transform:translateZ(148px)}
-  .stack-wrap:hover .l2{transform:translateZ(98px)}
-  .stack-wrap:hover .l3{transform:translateZ(48px)}
+  .term .ok{color:var(--lime)}
+  .term .cy{color:var(--cyan)}
+  .caret{display:inline-block;width:7px;background:var(--cyan);animation:blip 1s steps(1) infinite}
 
-  /* ══ three.js ══ */
-  #bottle3d{width:100%;height:440px;display:block;cursor:grab;touch-action:none}
+  #bottle3d{width:100%;height:clamp(290px,46vh,440px);display:block;cursor:grab;touch-action:none}
   #bottle3d:active{cursor:grabbing}
-  .fallback{
-    display:flex;align-items:center;justify-content:center;height:440px;
-    color:var(--ink-3);font-family:var(--mono);font-size:11px;text-align:center;padding:24px;
-  }
+  .fallback{display:flex;align-items:center;justify-content:center;height:clamp(290px,46vh,440px);color:var(--ink-3);font-family:var(--mono);font-size:11px;text-align:center;padding:22px}
 
-  /* ══ shoe spinner ══ */
   .spin{
-    position:relative;background:#000;border:1px solid var(--line);overflow:hidden;
+    position:relative;overflow:hidden;border:1px solid var(--hair);background:#000;
     cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;
-    display:flex;align-items:center;justify-content:center;min-height:310px;
+    display:flex;align-items:center;justify-content:center;min-height:clamp(270px,42vh,410px);
   }
-  .spin img{max-width:100%;max-height:380px;display:none;pointer-events:none;position:relative;z-index:2}
+  .spin img{max-width:100%;max-height:clamp(230px,36vh,380px);display:none;position:relative;z-index:3;pointer-events:none}
   .spin img.on{display:block}
-  .spin .deg{
-    position:absolute;bottom:9px;inset-inline-start:11px;z-index:4;
-    font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase;
-  }
-  .spin .tick{
-    position:absolute;bottom:9px;inset-inline-end:11px;z-index:4;
-    font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-3);
-  }
+  .spin .deg{position:absolute;bottom:8px;inset-inline-start:11px;z-index:5;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--cyan)}
+  .spin .ax{position:absolute;bottom:8px;inset-inline-end:11px;z-index:5;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-3)}
 
-  .band{display:block;width:100%;height:auto;border:1px solid var(--line)}
-  .note{font-family:var(--mono);font-size:10px;line-height:1.75;color:var(--ink-3);letter-spacing:.03em;margin:14px 0 0}
+  .band{display:block;width:100%;height:auto;border:1px solid var(--hair)}
+  .note{font-family:var(--mono);font-size:9.5px;line-height:1.8;color:var(--ink-3);margin:12px 0 0}
 
-  footer{padding-block:52px 72px;color:var(--ink-3);font-size:.86rem;border-top:1px solid var(--line)}
-  footer p{max-width:72ch;margin:0 0 10px}
+  /* ═════ index slide ═════ */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-bottom:22px}
+  .card{cursor:pointer;text-align:start;font:inherit;color:inherit;transition:.18s}
+  .card:hover{border-color:var(--hair-2);transform:translateY(-2px)}
+  .card h5{font-family:var(--display);font-weight:600;text-transform:uppercase;font-size:1rem;margin:8px 0 4px;letter-spacing:.03em}
+  .card p{margin:0;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+  .card .thumb{width:100%;height:96px;object-fit:contain;background:rgba(0,212,230,.05);display:block}
+
+  /* ═════ rail + pager ═════ */
+  .rail{
+    position:fixed;z-index:35;right:calc(14px + env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:9px;
+  }
+  .rail button{
+    width:26px;height:20px;padding:0;background:none;border:0;cursor:pointer;
+    font-family:var(--mono);font-size:9px;color:var(--ink-3);letter-spacing:.06em;
+    display:flex;align-items:center;justify-content:flex-end;gap:6px;transition:.16s;
+  }
+  .rail button::after{content:"";width:12px;height:1px;background:var(--ink-3);transition:.16s}
+  .rail button:hover{color:var(--cyan)}
+  .rail button[aria-current="true"]{color:var(--lime)}
+  .rail button[aria-current="true"]::after{width:22px;background:var(--grad);height:2px}
+  @media (max-width:640px){ .rail{display:none} }
+
+  .pager{
+    position:fixed;z-index:35;left:var(--pad);bottom:calc(16px + env(safe-area-inset-bottom,0px));
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;
+  }
+  .pager button{
+    width:32px;height:28px;background:var(--glass-2);border:1px solid var(--hair);
+    color:var(--ink-2);cursor:pointer;font-size:13px;line-height:1;transition:.15s;
+  }
+  .pager button:hover{color:var(--cyan);border-color:var(--hair-2)}
+  .pager button:disabled{opacity:.3;cursor:default}
+  .pager .cur{color:var(--lime)}
 
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
-    #field{display:none}
+    #bg{display:none}
   }
 </style>
 
-<canvas id="field" aria-hidden="true"></canvas>
-<div class="vig" aria-hidden="true"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="haze" aria-hidden="true"></div>
 <div class="scan" aria-hidden="true"></div>
+<div class="frame" aria-hidden="true"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i><span class="ticks"></span></div>
+<div class="reticle" id="ret" aria-hidden="true"><span></span></div>
 
-<nav>
-  <div class="nav-in">
-    <span class="mark">FLOW</span>
-    <div class="readout">
-      <span><i class="dot"></i>SYS ONLINE</span>
-      <span>KNIT <b>220–260 GSM</b></span>
-      <span>SEAM <b>ISO 607</b></span>
-      <span>ΔE <b>≤ 2.0</b></span>
-    </div>
-    <div class="nav-links">
-      <a href="#training">Training</a>
-      <a href="#tennis">Tennis</a>
-      <a href="#bottle">Bottle</a>
-      <a href="#shoe">R1</a>
-      <a href="#socks">Airknit</a>
-    </div>
-  </div>
-</nav>
+<div class="bar">
+  <span class="mark">FLOW</span>
+  <span><i class="led"></i>SYS ONLINE</span>
+  <span>KNIT <b>220–260 GSM</b></span>
+  <span>SEAM <b>ISO 607</b></span>
+  <span class="sp">MODULE <b id="barMod">00 / 06</b></span>
+</div>
 
-<header class="hero">
-  <div class="hero-bg" aria-hidden="true"></div>
-  <div class="wrap hero-in">
-    <p class="eyebrow">// Energy in Motion</p>
-    <h1>The <span class="glitch" data-t="FLOW">FLOW</span><br>Product System</h1>
-    <p class="lede">Five products, one gradient. A women's training set and tennis kit engineered on 88/12 poly-spandex with all-over sublimation — plus the bottle, shoe and socks that close the loop.</p>
-    <div class="stats">
-      <div class="stat hud"><i class="cnr"></i><b>05</b><span>Products</span></div>
-      <div class="stat hud"><i class="cnr"></i><b>04</b><span>Colourways</span></div>
-      <div class="stat hud"><i class="cnr"></i><b>68 cm</b><span>Inseam</span></div>
-      <div class="stat hud"><i class="cnr"></i><b>XS–XL</b><span>Size range</span></div>
-    </div>
-  </div>
-</header>
+<div id="app">
+<div class="deck" id="deck">
 
-<main>
-
-<!-- ═══ 01 TRAINING ═══ -->
-<div class="cine"><div class="ph" style="background-image:url(img/bg-street.jpg)"></div>
-  <div class="cine-txt"><p>// Module 01</p><h4>Outrun the future</h4></div></div>
-
-<section class="model wrap" id="training">
-  <div class="idline"><span class="no">01</span><span>Apparel · Training</span><span class="rule"></span><span>SKU FLW-TS</span></div>
-  <h2>Women's Training Set</h2>
-  <p class="sub">Racerback sports bra with a breathable mesh back and removable moulded cups, over high-rise leggings cut on a reinforced gusset. The gradient is sublimated into the fabric before a single panel is cut — so it runs unbroken across every seam.</p>
-
-  <div class="split">
+<!-- ══════ 00 SYSTEM ══════ -->
+<section class="slide live" id="s0" aria-label="System overview">
+  <div class="grid2">
     <div>
-      <div class="stage light hud" id="trStage"><i class="cnr"></i>
-        <div class="grid-bg"></div><div class="sweep"></div>
-        <img class="frame on" data-k="front" src="img/bra-front.jpg" alt="Sports bra, front view, lime-to-cyan gradient.">
-        <img class="frame" data-k="back" src="img/bra-back.jpg" alt="Sports bra, back view showing the racerback.">
-        <img class="frame" data-k="mesh" src="img/bra-mesh.jpg" alt="Sports bra back with the breathable mesh panel.">
-        <img class="frame" data-k="side" src="img/bra-side.jpg" alt="Sports bra, side view.">
-        <img class="frame" data-k="lfront" src="img/leg-front.jpg" alt="High-rise leggings, front view.">
-        <img class="frame" data-k="lback" src="img/leg-back.jpg" alt="High-rise leggings, back view.">
-        <img class="frame" data-k="lside" src="img/leg-side.jpg" alt="High-rise leggings, side view.">
-        <img class="frame" data-k="pbra" src="img/bra-pink.jpg" alt="Sports bra in the pink-to-violet colourway.">
-        <img class="frame" data-k="pleg" src="img/leg-pink.jpg" alt="Leggings in the pink-to-violet colourway.">
+      <div class="idx"><span class="n">00</span><span>System</span><span class="rule"></span><span>FLW-SYS</span></div>
+      <h1>THE <span class="glitchy g" data-t="FLOW">FLOW</span><br>SYSTEM</h1>
+      <p class="lede">Five products, one gradient. A women's training set and tennis kit engineered on 88/12 poly-spandex with all-over sublimation — plus the bottle, shoe and socks that close the loop.</p>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Boot log</p>
+        <p class="term" id="term"></p>
+      </div>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:12px"><i class="cnr"></i>
+        <p class="plabel">// Core parameters</p>
+        <div class="stats">
+          <div class="stat"><b>05</b><span>Products</span></div>
+          <div class="stat"><b>04</b><span>Colourways</span></div>
+          <div class="stat"><b>68 cm</b><span>Inseam</span></div>
+          <div class="stat"><b>XS–XL</b><span>Sizes</span></div>
+          <div class="stat"><b>88/12</b><span>Poly / Spandex</span></div>
+          <div class="stat"><b>ΔE ≤ 2.0</b><span>Colour tolerance</span></div>
+        </div>
+      </div>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Navigation</p>
+        <ul class="feat">
+          <li><b>Arrow keys</b> or the rail on the right move between modules.</li>
+          <li><b>Drag</b> the bottle and the shoe to rotate them.</li>
+          <li>Every figure here is read from the deck's own tech pack pages.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ 01 TRAINING ══════ -->
+<section class="slide" id="s1" aria-label="Training set">
+  <div class="grid2">
+    <div>
+      <div class="holo pale" id="trStage">
+        <div class="mesh"></div><div class="hbars"></div><div class="beam"></div>
+        <img class="frame-img on" data-k="front" src="img/bra-front.jpg" alt="Sports bra, front view, lime-to-cyan gradient.">
+        <img class="frame-img" data-k="back" src="img/bra-back.jpg" alt="Sports bra, back view showing the racerback.">
+        <img class="frame-img" data-k="mesh" src="img/bra-mesh.jpg" alt="Sports bra back with the breathable mesh panel.">
+        <img class="frame-img" data-k="side" src="img/bra-side.jpg" alt="Sports bra, side view.">
+        <img class="frame-img" data-k="lfront" src="img/leg-front.jpg" alt="High-rise leggings, front view.">
+        <img class="frame-img" data-k="lback" src="img/leg-back.jpg" alt="High-rise leggings, back view.">
+        <img class="frame-img" data-k="lside" src="img/leg-side.jpg" alt="High-rise leggings, side view.">
+        <img class="frame-img" data-k="pbra" src="img/bra-pink.jpg" alt="Sports bra in the pink-to-violet colourway.">
+        <img class="frame-img" data-k="pleg" src="img/leg-pink.jpg" alt="Leggings in the pink-to-violet colourway.">
+        <div class="plinth"></div>
       </div>
       <div class="controls">
         <button class="chip" type="button" data-k="front" aria-pressed="true">Bra front</button>
         <button class="chip" type="button" data-k="back" aria-pressed="false">Bra back</button>
-        <button class="chip" type="button" data-k="mesh" aria-pressed="false">Mesh panel</button>
+        <button class="chip" type="button" data-k="mesh" aria-pressed="false">Mesh</button>
         <button class="chip" type="button" data-k="side" aria-pressed="false">Bra side</button>
-      </div>
-      <div class="controls">
         <button class="chip" type="button" data-k="lfront" aria-pressed="false">Legging front</button>
         <button class="chip" type="button" data-k="lback" aria-pressed="false">Legging back</button>
         <button class="chip" type="button" data-k="lside" aria-pressed="false">Legging side</button>
-        <button class="chip pink" type="button" data-k="pbra" aria-pressed="false">Pink bra</button>
-        <button class="chip pink" type="button" data-k="pleg" aria-pressed="false">Pink legging</button>
+        <button class="chip alt" type="button" data-k="pbra" aria-pressed="false">Pink bra</button>
+        <button class="chip alt" type="button" data-k="pleg" aria-pressed="false">Pink legging</button>
       </div>
     </div>
-
     <div>
-      <h3>// Specification</h3>
-      <dl class="spec">
-        <div><dt>Composition</dt><dd>88% Polyester / 12% Spandex</dd></div>
-        <div><dt>Weight</dt><dd>220–260 GSM</dd></div>
-        <div><dt>Structure</dt><dd>Circular performance knit<em>4-way stretch</em></dd></div>
-        <div><dt>Print</dt><dd>All-over sublimation<em>applied before cutting</em></dd></div>
-        <div><dt>Principal seams</dt><dd>4-thread overlock<em>ISO 514</em></dd></div>
-        <div><dt>Edges</dt><dd>Coverstitch<em>ISO 406</em></dd></div>
-        <div><dt>Chafe-free seams</dt><dd>Flatlock<em>ISO 607</em></dd></div>
-        <div><dt>Inseam</dt><dd>68 cm<em>high rise · medium compression</em></dd></div>
-        <div><dt>Waistband</dt><dd>4 cm jacquard elastic</dd></div>
-        <div><dt>Cups</dt><dd>Removable moulded<em>internal pocket</em></dd></div>
-        <div><dt>Sizes</dt><dd>XS · S · M · L · XL</dd></div>
-        <div><dt>Certifications</dt><dd>OEKO-TEX 100 · REACH<em>SGS tested · ISO 9001:2015</em></dd></div>
-      </dl>
+      <div class="idx"><span class="n">01</span><span>Apparel · Training</span><span class="rule"></span><span>FLW-TS</span></div>
+      <h2>Women's<br>Training Set</h2>
+      <p class="lede">Racerback bra with a mesh back and removable moulded cups, over high-rise leggings on a reinforced gusset. The gradient is sublimated into the fabric before a single panel is cut — so it runs unbroken across every seam.</p>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Specification</p>
+        <dl class="spec">
+          <div><dt>Composition</dt><dd>88% Polyester / 12% Spandex</dd></div>
+          <div><dt>Weight</dt><dd>220–260 GSM</dd></div>
+          <div><dt>Structure</dt><dd>Circular performance knit<em>4-way stretch</em></dd></div>
+          <div><dt>Print</dt><dd>All-over sublimation<em>applied before cutting</em></dd></div>
+          <div><dt>Principal seams</dt><dd>4-thread overlock<em>ISO 514</em></dd></div>
+          <div><dt>Edges</dt><dd>Coverstitch<em>ISO 406</em></dd></div>
+          <div><dt>Chafe-free</dt><dd>Flatlock<em>ISO 607</em></dd></div>
+          <div><dt>Inseam</dt><dd>68 cm<em>high rise · medium compression</em></dd></div>
+          <div><dt>Waistband</dt><dd>4 cm jacquard elastic</dd></div>
+          <div><dt>Cups</dt><dd>Removable moulded<em>internal pocket</em></dd></div>
+          <div><dt>Sizes</dt><dd>XS · S · M · L · XL</dd></div>
+          <div><dt>Certifications</dt><dd>OEKO-TEX 100 · REACH<em>SGS · ISO 9001:2015</em></dd></div>
+        </dl>
+      </div>
     </div>
   </div>
-
-  <h3 style="margin-top:50px">// Fabric build — hover to separate</h3>
-  <div class="stack-wrap">
-    <div class="stack">
-      <div class="layer l1"><span>01 Sublimation print</span></div>
-      <div class="layer l2"><span>02 Performance knit 88/12</span></div>
-      <div class="layer l3"><span>03 4-way stretch core</span></div>
-      <div class="layer l4"><span>04 Skin comfort layer</span></div>
-    </div>
-  </div>
-  <p class="note">Four layers, in the order the tech pack's exploded diagram sets them out. The print sits on the face; only layer 04 touches skin.</p>
 </section>
 
-<!-- ═══ 02 TENNIS ═══ -->
-<div class="cine"><div class="ph" style="background-image:url(img/bg-aurora.jpg)"></div>
-  <div class="cine-txt"><p>// Module 02</p><h4>Designed to move beyond limits</h4></div></div>
-
-<section class="model wrap" id="tennis">
-  <div class="idline"><span class="no">02</span><span>Apparel · Tennis</span><span class="rule"></span><span>SKU FLW-TN</span></div>
-  <h2>Tennis Collection</h2>
-  <p class="sub">A three-layer bra — performance face, ventilation mesh, soft inner — over a skort with built-in shorts. Two colourways: the lime-to-cyan gradient, and white carrying fine lime and cyan lines.</p>
-
-  <div class="split">
+<!-- ══════ 02 TENNIS ══════ -->
+<section class="slide" id="s2" aria-label="Tennis collection">
+  <div class="grid2">
     <div>
-      <div class="stage hud" id="tnStage"><i class="cnr"></i>
-        <div class="grid-bg"></div><div class="sweep"></div>
-        <img class="frame on" data-k="bra" src="img/tennis-bra.jpg" alt="Tennis bra with mesh racerback in lime-to-cyan.">
-        <img class="frame" data-k="skort" src="img/tennis-skort.jpg" alt="Tennis skort with built-in inner shorts.">
+      <div class="holo" id="tnStage">
+        <div class="mesh"></div><div class="hbars"></div><div class="beam"></div>
+        <img class="frame-img on" data-k="bra" src="img/tennis-bra.jpg" alt="Tennis bra with mesh racerback in lime-to-cyan.">
+        <img class="frame-img" data-k="skort" src="img/tennis-skort.jpg" alt="Tennis skort with built-in inner shorts.">
+        <div class="plinth"></div>
       </div>
       <div class="controls">
         <button class="chip" type="button" data-k="bra" aria-pressed="true">Bra</button>
@@ -446,37 +448,36 @@
       </div>
     </div>
     <div>
-      <h3>// Construction</h3>
-      <ul class="feat">
-        <li><b>Three-layer build.</b> Lightweight performance face, breathable mesh for ventilation, soft-touch inner against the skin.</li>
-        <li><b>Mesh racerback.</b> Engineered openings across the shoulder blades, where heat builds during a match.</li>
-        <li><b>Built-in inner shorts.</b> Coverage under the skort without a second garment.</li>
-        <li><b>Elastic comfort waistband.</b> The FLOW logo sits on the band — secure without gripping.</li>
-      </ul>
-      <h3 style="margin-top:32px">// Deployment</h3>
-      <dl class="spec">
-        <div><dt>Activities</dt><dd>Tennis · Training · Running · Yoga</dd></div>
-        <div><dt>Sizes</dt><dd>XS · S · M · L · XL</dd></div>
-        <div><dt>Colourways</dt><dd>Lime to Cyan<em>White with lime &amp; cyan lines</em></dd></div>
-      </dl>
-      <p class="note">No flat sketches or stitch codes exist for this collection in the source deck — it is a concept, not yet a costable tech pack.</p>
+      <div class="idx"><span class="n">02</span><span>Apparel · Tennis</span><span class="rule"></span><span>FLW-TN</span></div>
+      <h2>Tennis<br>Collection</h2>
+      <p class="lede">A three-layer bra — performance face, ventilation mesh, soft inner — over a skort with built-in shorts.</p>
+      <div class="panel" style="margin-bottom:12px"><i class="cnr"></i>
+        <p class="plabel">// Construction</p>
+        <ul class="feat">
+          <li><b>Three-layer build.</b> Performance face, breathable mesh, soft-touch inner against the skin.</li>
+          <li><b>Mesh racerback.</b> Openings across the shoulder blades, where heat builds during a match.</li>
+          <li><b>Built-in inner shorts.</b> Coverage under the skort without a second garment.</li>
+          <li><b>Elastic comfort waistband.</b> The logo sits on the band — secure without gripping.</li>
+        </ul>
+      </div>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Deployment</p>
+        <dl class="spec">
+          <div><dt>Activities</dt><dd>Tennis · Training · Running · Yoga</dd></div>
+          <div><dt>Sizes</dt><dd>XS · S · M · L · XL</dd></div>
+          <div><dt>Colourways</dt><dd>Lime to Cyan<em>White with lime &amp; cyan lines</em></dd></div>
+        </dl>
+        <p class="note">No flat sketches or stitch codes exist for this collection in the source deck — a concept, not yet a costable tech pack.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ 03 BOTTLE ═══ -->
-<div class="cine"><div class="ph" style="background-image:url(img/bg-space.jpg)"></div>
-  <div class="cine-txt"><p>// Module 03</p><h4>Built to perform</h4></div></div>
-
-<section class="model wrap" id="bottle">
-  <div class="idline"><span class="no">03</span><span>Hydration</span><span class="rule"></span><span>SKU FLW-BT</span></div>
-  <h2>FLOW Bottle</h2>
-  <p class="sub">Triple-wall vacuum insulation with a copper layer, 18/8 stainless inside and out, and a smart base carrying an NFC chip and an LED ring. Live 3D — drag to rotate.</p>
-
-  <div class="split">
+<!-- ══════ 03 BOTTLE ══════ -->
+<section class="slide" id="s3" aria-label="FLOW bottle">
+  <div class="grid2">
     <div>
-      <div class="stage hud" style="padding:0;min-height:440px;display:block"><i class="cnr"></i>
-        <div class="grid-bg"></div>
+      <div class="holo" style="padding:0;display:block"><div class="mesh"></div>
         <canvas id="bottle3d" aria-label="Rotatable 3D model of the FLOW bottle"></canvas>
       </div>
       <div class="controls" id="btCtl">
@@ -485,233 +486,318 @@
         <button class="chip" type="button" data-c="black" aria-pressed="false">Matte black</button>
         <button class="chip" type="button" data-c="sand" aria-pressed="false">Sand beige</button>
       </div>
-      <p class="hint">Drag to rotate · releases to auto-spin</p>
     </div>
     <div>
-      <h3>// Specification</h3>
-      <dl class="spec">
-        <div><dt>Capacity</dt><dd>750 ml · 1 L</dd></div>
-        <div><dt>Body</dt><dd>18/8 stainless (SUS304)<em>inner and outer wall</em></dd></div>
-        <div><dt>Insulation</dt><dd>Triple wall + copper<em>vacuum sealed</em></dd></div>
-        <div><dt>Cold retention</dt><dd>up to 48 h</dd></div>
-        <div><dt>Hot retention</dt><dd>up to 18 h</dd></div>
-        <div><dt>Lid</dt><dd>3-in-1 multiflow<em>straw · fast flow · chug</em></dd></div>
-        <div><dt>Smart base</dt><dd>NFC · 1200 mAh · USB-C<em>IPX7 · RGB status ring</em></dd></div>
-        <div><dt>Battery</dt><dd>30 days<em>2 h full charge</em></dd></div>
-      </dl>
-      <img class="band" style="margin-top:20px" src="img/bottle-colors.jpg" alt="The five bottle colourways: lime/cyan, cyan/deep blue, matte black, sand beige, midnight blue.">
-      <p class="note">Retention figures are performance targets from the deck, to be confirmed by production testing.</p>
+      <div class="idx"><span class="n">03</span><span>Hydration</span><span class="rule"></span><span>FLW-BT</span></div>
+      <h2>FLOW<br>Bottle</h2>
+      <p class="lede">Triple-wall vacuum insulation with a copper layer, 18/8 stainless inside and out, and a smart base carrying an NFC chip and an LED ring. Live 3D — drag to rotate.</p>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Specification</p>
+        <dl class="spec">
+          <div><dt>Capacity</dt><dd>750 ml · 1 L</dd></div>
+          <div><dt>Body</dt><dd>18/8 stainless (SUS304)<em>inner and outer wall</em></dd></div>
+          <div><dt>Insulation</dt><dd>Triple wall + copper<em>vacuum sealed</em></dd></div>
+          <div><dt>Cold</dt><dd>up to 48 h</dd></div>
+          <div><dt>Hot</dt><dd>up to 18 h</dd></div>
+          <div><dt>Lid</dt><dd>3-in-1 multiflow<em>straw · fast flow · chug</em></dd></div>
+          <div><dt>Smart base</dt><dd>NFC · 1200 mAh · USB-C<em>IPX7 · RGB status ring</em></dd></div>
+          <div><dt>Battery</dt><dd>30 days<em>2 h full charge</em></dd></div>
+        </dl>
+        <img class="band" style="margin-top:14px" src="img/bottle-colors.jpg" alt="The five bottle colourways.">
+        <p class="note">Retention figures are performance targets from the deck, to be confirmed by production testing.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ 04 SHOE ═══ -->
-<div class="cine"><div class="ph" style="background-image:url(img/bg-robots.jpg)"></div>
-  <div class="cine-txt"><p>// Module 04</p><h4>Move without limits</h4></div></div>
-
-<section class="model wrap" id="shoe">
-  <div class="idline"><span class="no">04</span><span>Footwear</span><span class="rule"></span><span>SKU FLW-R1</span></div>
-  <h2>FLOW R1</h2>
-  <p class="sub">Engineered jacquard mesh over a supercritical EVA/PEBA midsole, locked down by a TPU midfoot cage. Drag across the shoe to spin it, or jump to the top and outsole views.</p>
-
-  <div class="split">
+<!-- ══════ 04 SHOE ══════ -->
+<section class="slide" id="s4" aria-label="FLOW R1 shoe">
+  <div class="grid2">
     <div>
-      <div class="spin hud" id="spin"><i class="cnr"></i>
-        <div class="grid-bg"></div>
+      <div class="spin" id="spin">
+        <div class="mesh"></div>
         <img class="on" data-i="0" src="img/shoe-front.jpg" alt="FLOW R1, front view.">
         <img data-i="1" src="img/shoe-medial.jpg" alt="FLOW R1, medial view.">
         <img data-i="2" src="img/shoe-rear.jpg" alt="FLOW R1, rear view.">
         <img data-i="3" src="img/shoe-side.jpg" alt="FLOW R1, lateral side view.">
-        <span class="deg" id="deg">000°</span>
-        <span class="tick">ROT · AXIS Y</span>
+        <span class="deg" id="deg">000°</span><span class="ax">ROT · AXIS Y</span>
       </div>
       <div class="controls" id="shCtl">
         <button class="chip" type="button" data-i="0" aria-pressed="true">Front</button>
         <button class="chip" type="button" data-i="1" aria-pressed="false">Medial</button>
         <button class="chip" type="button" data-i="2" aria-pressed="false">Rear</button>
         <button class="chip" type="button" data-i="3" aria-pressed="false">Lateral</button>
-      </div>
-      <div class="controls">
-        <button class="chip" type="button" id="shTop" aria-pressed="false">Top view</button>
+        <button class="chip" type="button" id="shTop" aria-pressed="false">Top</button>
         <button class="chip" type="button" id="shSole" aria-pressed="false">Outsole</button>
       </div>
-      <p class="hint">Drag left / right to rotate</p>
     </div>
     <div>
-      <h3>// Material breakdown</h3>
-      <ul class="feat">
-        <li><b>Engineered jacquard mesh.</b> Variable weave zones — open where the foot needs air, dense where it needs hold.</li>
-        <li><b>TPU hot-melt overlays.</b> Seamless support bonded to the upper instead of stitched onto it.</li>
-        <li><b>TPU midfoot cage.</b> Integrated lockdown and lateral stability.</li>
-        <li><b>Supercritical EVA / PEBA.</b> High-rebound foam for cushioning and energy return.</li>
-        <li><b>High-abrasion rubber outsole.</b> Multi-directional traction for gym floors and outdoor runs.</li>
-      </ul>
-      <h3 style="margin-top:32px">// Sizing</h3>
-      <dl class="spec">
-        <div><dt>EU</dt><dd>36 – 46</dd></div>
-        <div><dt>US</dt><dd>4 – 12</dd></div>
-        <div><dt>UK</dt><dd>3.5 – 11</dd></div>
-        <div><dt>Design</dt><dd>Unisex</dd></div>
-        <div><dt>Insole</dt><dd>Ortholite<em>licensed ingredient brand</em></dd></div>
-      </dl>
-      <p class="note">The tongue mark in these renders is not the FLOW wing, and the outsole carries nonsense lettering — both are generation artefacts and need the render redone before any external use.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ 05 SOCKS ═══ -->
-<div class="cine"><div class="ph" style="background-image:url(img/bg-jungle.jpg)"></div>
-  <div class="cine-txt"><p>// Module 05</p><h4>Engineered to flow</h4></div></div>
-
-<section class="model wrap" id="socks">
-  <div class="idline"><span class="no">05</span><span>Accessories</span><span class="rule"></span><span>SKU FLW-AK</span></div>
-  <h2>FLOW Airknit</h2>
-  <p class="sub">Circular-knit performance socks with a seamless toe, an anatomical Y heel and targeted arch compression. Silver-ion yarn carries the odour control.</p>
-
-  <div class="split">
-    <div>
-      <div class="stage hud" style="min-height:380px"><i class="cnr"></i>
-        <div class="grid-bg"></div><div class="sweep"></div>
-        <img src="img/sock.jpg" alt="FLOW Airknit performance sock in white and lime, showing mesh zones and arch compression.">
+      <div class="idx"><span class="n">04</span><span>Footwear</span><span class="rule"></span><span>FLW-R1</span></div>
+      <h2>FLOW R1</h2>
+      <p class="lede">Engineered jacquard mesh over a supercritical EVA/PEBA midsole, locked down by a TPU midfoot cage. Drag across the shoe to spin it.</p>
+      <div class="panel" style="margin-bottom:12px"><i class="cnr"></i>
+        <p class="plabel">// Material breakdown</p>
+        <ul class="feat">
+          <li><b>Engineered jacquard mesh.</b> Variable weave zones — open where the foot needs air, dense where it needs hold.</li>
+          <li><b>TPU hot-melt overlays.</b> Seamless support bonded to the upper instead of stitched onto it.</li>
+          <li><b>TPU midfoot cage.</b> Integrated lockdown and lateral stability.</li>
+          <li><b>Supercritical EVA / PEBA.</b> High-rebound foam for cushioning and energy return.</li>
+        </ul>
+      </div>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Sizing</p>
+        <dl class="spec">
+          <div><dt>EU</dt><dd>36 – 46</dd></div>
+          <div><dt>US</dt><dd>4 – 12</dd></div>
+          <div><dt>UK</dt><dd>3.5 – 11</dd></div>
+          <div><dt>Design</dt><dd>Unisex</dd></div>
+        </dl>
+        <p class="note">The tongue mark in these renders is not the FLOW wing, and the outsole carries nonsense lettering — generation artefacts that need the render redone before external use.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ══════ 05 SOCKS ══════ -->
+<section class="slide" id="s5" aria-label="FLOW Airknit socks">
+  <div class="grid2">
     <div>
-      <h3>// Specification</h3>
-      <dl class="spec">
-        <div><dt>Composition</dt><dd>55% Nylon 6.6 · 25% Coolmax<em>15% Elastane (Lycra) · 5% Silver ion yarn</em></dd></div>
-        <div><dt>Weight</dt><dd>28–35 g per pair<em>ankle height</em></dd></div>
-        <div><dt>Fit</dt><dd>Anatomical L / R</dd></div>
-        <div><dt>Heights</dt><dd>No show · Ankle · Crew</dd></div>
-        <div><dt>Toe</dt><dd>Seamless</dd></div>
-        <div><dt>Compression</dt><dd>Light, arch only</dd></div>
-        <div><dt>Cushion zones</dt><dd>Heel · Forefoot</dd></div>
-        <div><dt>Sizes</dt><dd>EU 36–38 · 39–42 · 43–46</dd></div>
-      </dl>
-      <img class="band" style="margin-top:20px" src="img/sock-colors.jpg" alt="The four sock colourways: white/lime, lime/black, black/lime, cyan/lime.">
-      <p class="note">Coolmax and Lycra are licensed ingredient brands — naming them on product or packaging needs a supply and trademark agreement.</p>
+      <div class="holo">
+        <div class="mesh"></div><div class="hbars"></div><div class="beam"></div>
+        <img src="img/sock.jpg" alt="FLOW Airknit performance sock in white and lime.">
+        <div class="plinth"></div>
+      </div>
+      <img class="band" style="margin-top:12px" src="img/sock-colors.jpg" alt="The four sock colourways.">
+    </div>
+    <div>
+      <div class="idx"><span class="n">05</span><span>Accessories</span><span class="rule"></span><span>FLW-AK</span></div>
+      <h2>FLOW<br>Airknit</h2>
+      <p class="lede">Circular-knit performance socks with a seamless toe, an anatomical Y heel and targeted arch compression. Silver-ion yarn carries the odour control.</p>
+      <div class="panel"><i class="cnr"></i>
+        <p class="plabel">// Specification</p>
+        <dl class="spec">
+          <div><dt>Composition</dt><dd>55% Nylon 6.6 · 25% Coolmax<em>15% Elastane (Lycra) · 5% Silver ion</em></dd></div>
+          <div><dt>Weight</dt><dd>28–35 g per pair<em>ankle height</em></dd></div>
+          <div><dt>Fit</dt><dd>Anatomical L / R</dd></div>
+          <div><dt>Heights</dt><dd>No show · Ankle · Crew</dd></div>
+          <div><dt>Toe</dt><dd>Seamless</dd></div>
+          <div><dt>Compression</dt><dd>Light, arch only</dd></div>
+          <div><dt>Cushion</dt><dd>Heel · Forefoot</dd></div>
+          <div><dt>Sizes</dt><dd>EU 36–38 · 39–42 · 43–46</dd></div>
+        </dl>
+        <p class="note">Coolmax and Lycra are licensed ingredient brands — naming them on product or packaging needs a supply and trademark agreement.</p>
+      </div>
     </div>
   </div>
 </section>
 
-</main>
+<!-- ══════ 06 INDEX ══════ -->
+<section class="slide" id="s6" aria-label="System index">
+  <div style="max-width:1320px;margin:0 auto">
+    <div class="idx"><span class="n">06</span><span>Index</span><span class="rule"></span><span>FLW-IDX</span></div>
+    <h2>System Index</h2>
+    <div class="cards">
+      <button class="panel card" type="button" data-go="1"><i class="cnr"></i>
+        <img class="thumb" src="img/bra-front.jpg" alt=""><h5>Training Set</h5><p>01 · Bra + Leggings</p></button>
+      <button class="panel card" type="button" data-go="2"><i class="cnr"></i>
+        <img class="thumb" src="img/tennis-skort.jpg" alt=""><h5>Tennis</h5><p>02 · Bra + Skort</p></button>
+      <button class="panel card" type="button" data-go="3"><i class="cnr"></i>
+        <img class="thumb" src="img/bottle-colors.jpg" alt=""><h5>Bottle</h5><p>03 · 750 ml · 1 L</p></button>
+      <button class="panel card" type="button" data-go="4"><i class="cnr"></i>
+        <img class="thumb" src="img/shoe-side.jpg" alt=""><h5>FLOW R1</h5><p>04 · EU 36–46</p></button>
+      <button class="panel card" type="button" data-go="5"><i class="cnr"></i>
+        <img class="thumb" src="img/sock.jpg" alt=""><h5>Airknit</h5><p>05 · 3 heights</p></button>
+    </div>
+    <div class="panel"><i class="cnr"></i>
+      <p class="plabel">// Open items</p>
+      <ul class="feat">
+        <li><b>Colour references.</b> The deck labels hex values as Pantone and gives three different forms across pages 9, 15 and 17, while asking for ΔE ≤ 2.0. Real TCX references or a dyed swatch are needed before any factory can dye to it.</li>
+        <li><b>Tennis tech pack.</b> Flats, stitch codes and colour codes do not exist yet for module 02.</li>
+        <li><b>R1 render.</b> The tongue carries a mark that is not the FLOW wing, and the outsole has nonsense lettering.</li>
+        <li><b>Ingredient brands.</b> Coolmax, Lycra and Ortholite each need a supply and trademark agreement before they appear on packaging.</li>
+      </ul>
+      <p class="note">Built from FLOW.pdf. Every specification is read from the deck's own tech pack pages; flats, renders and colourway strips are cropped from it directly.</p>
+    </div>
+  </div>
+</section>
 
-<footer class="wrap">
-  <p>Built from FLOW.pdf. Every specification here is taken from the deck's own tech pack pages; the flats, renders, colourway strips and campaign backdrops are cropped from it directly.</p>
-  <p>Colour codes are the one thing missing: the deck labels hex values as Pantone references and gives three different forms across pages 9, 15 and 17 — so no colourway on this page can claim a matched reference yet.</p>
-</footer>
+</div>
+</div>
+
+<div class="rail" id="rail" aria-label="Module navigation"></div>
+
+<div class="pager">
+  <button id="prev" type="button" aria-label="Previous module">&#8592;</button>
+  <button id="next" type="button" aria-label="Next module">&#8594;</button>
+  <span><span class="cur" id="pgCur">00</span> / 06</span>
+</div>
 
 <script>
 (function(){
   "use strict";
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ══ flow field — the brand's own line pattern, in motion ══ */
+  /* ═════ deck ═════ */
+  var deck = document.getElementById("deck");
+  var slides = Array.prototype.slice.call(deck.querySelectorAll(".slide"));
+  var NAMES = ["System","Training","Tennis","Bottle","R1","Airknit","Index"];
+  var cur = 0;
+  deck.classList.add("ready");
+
+  var rail = document.getElementById("rail");
+  slides.forEach(function(s, i){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = ("0" + i).slice(-2);
+    b.title = NAMES[i];
+    b.setAttribute("aria-current", i === 0 ? "true" : "false");
+    b.addEventListener("click", function(){ go(i); });
+    rail.appendChild(b);
+  });
+  var railBtns = rail.querySelectorAll("button");
+  var barMod = document.getElementById("barMod");
+  var pgCur = document.getElementById("pgCur");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+
+  function go(i){
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    if(i === cur) return;
+    cur = i;
+    slides.forEach(function(s, k){ s.classList.toggle("live", k === i); });
+    railBtns.forEach(function(b, k){ b.setAttribute("aria-current", String(k === i)); });
+    var n = ("0" + i).slice(-2);
+    if(barMod) barMod.textContent = n + " / 06";
+    if(pgCur) pgCur.textContent = n;
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+    if(!reduced){
+      deck.classList.remove("glitch");
+      void deck.offsetWidth;
+      deck.classList.add("glitch");
+    }
+    try{ history.replaceState(null, "", "#m" + i); }catch(e){}
+    slides[i].scrollTop = 0;
+  }
+  prev.addEventListener("click", function(){ go(cur - 1); });
+  next.addEventListener("click", function(){ go(cur + 1); });
+  prev.disabled = true;
+
+  document.addEventListener("keydown", function(e){
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if(t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    if(e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "PageDown" || e.key === " "){ go(cur + 1); e.preventDefault(); }
+    else if(e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp"){ go(cur - 1); e.preventDefault(); }
+    else if(e.key === "Home"){ go(0); e.preventDefault(); }
+    else if(e.key === "End"){ go(slides.length - 1); e.preventDefault(); }
+  });
+
+  // touch swipe, only when the slide is not scrolled mid-content
+  var tX = 0, tY = 0;
+  document.addEventListener("touchstart", function(e){
+    if(e.touches.length !== 1) return;
+    tX = e.touches[0].clientX; tY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener("touchend", function(e){
+    if(!e.changedTouches.length) return;
+    var dx = e.changedTouches[0].clientX - tX;
+    var dy = e.changedTouches[0].clientY - tY;
+    if(Math.abs(dx) > 64 && Math.abs(dx) > Math.abs(dy) * 1.6) go(cur + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function(b){
+    b.addEventListener("click", function(){ go(Number(b.dataset.go)); });
+  });
+
+  var h = (location.hash || "").replace("#m", "");
+  if(h && /^[0-6]$/.test(h)) go(Number(h));
+
+  /* ═════ reticle ═════ */
   (function(){
-    var cv = document.getElementById("field");
-    if(!cv || reduced) return;
-    var ctx = cv.getContext("2d");
-    if(!ctx) return;
-    var W, H, pts = [], N = 0, t = 0;
-
-    function seed(){
-      W = cv.width = Math.floor(window.innerWidth);
-      H = cv.height = Math.floor(window.innerHeight);
-      N = Math.max(40, Math.min(150, Math.floor(W * H / 14000)));
-      pts = [];
-      for(var i = 0; i < N; i++){
-        pts.push({ x: Math.random() * W, y: Math.random() * H, life: Math.random() * 260 });
-      }
-      ctx.fillStyle = "#030608";
-      ctx.fillRect(0, 0, W, H);
-    }
-
-    // analytic flow field — smooth, organic, no noise library needed
-    function angleAt(x, y, tt){
-      return Math.sin(x * 0.0016 + tt) * 1.5
-           + Math.cos(y * 0.0021 - tt * 0.8) * 1.5
-           + Math.sin((x + y) * 0.0009 + tt * 0.4);
-    }
-
-    function step(){
-      t += 0.0016;
-      ctx.fillStyle = "rgba(3,6,8,0.055)";
-      ctx.fillRect(0, 0, W, H);
-      ctx.lineWidth = 1;
-      for(var i = 0; i < N; i++){
-        var p = pts[i];
-        var a = angleAt(p.x, p.y, t);
-        var nx = p.x + Math.cos(a) * 1.5;
-        var ny = p.y + Math.sin(a) * 1.5;
-        var mix = (Math.sin(a) + 1) / 2;
-        ctx.strokeStyle = "rgba(" +
-          Math.round(0 + mix * 205) + "," +
-          Math.round(212 + mix * 28) + "," +
-          Math.round(230 - mix * 230) + ",0.38)";
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(nx, ny);
-        ctx.stroke();
-        p.x = nx; p.y = ny; p.life--;
-        if(p.life < 0 || p.x < 0 || p.x > W || p.y < 0 || p.y > H){
-          p.x = Math.random() * W; p.y = Math.random() * H; p.life = 160 + Math.random() * 260;
-        }
-      }
-      requestAnimationFrame(step);
-    }
-    seed();
-    var rt;
-    window.addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(seed, 220); });
-    step();
+    var r = document.getElementById("ret");
+    if(!r || reduced) return;
+    window.addEventListener("pointermove", function(e){
+      if(e.pointerType !== "mouse") return;
+      r.classList.add("on");
+      r.style.transform = "translate(" + e.clientX + "px," + e.clientY + "px)";
+    });
   })();
 
-  /* ══ frame switchers ══ */
-  function switcher(stageId){
-    var stage = document.getElementById(stageId);
-    if(!stage) return;
-    var frames = stage.querySelectorAll(".frame");
-    var btns = stage.parentNode.querySelectorAll(".controls button");
-    function show(k){
-      frames.forEach(function(f){ f.classList.toggle("on", f.dataset.k === k); });
-      btns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.k === k)); });
+  /* ═════ boot log ═════ */
+  (function(){
+    var el = document.getElementById("term");
+    if(!el) return;
+    var LINES = [
+      "> init flow.system",
+      "  loading tech pack .......... <span class='ok'>OK</span>",
+      "  knit 88/12 · 220-260 gsm ... <span class='ok'>OK</span>",
+      "  seams ISO 514/406/607 ...... <span class='ok'>OK</span>",
+      "  colour refs ................ <span class='cy'>PENDING</span>",
+      "> 5 modules ready"
+    ];
+    if(reduced){ el.innerHTML = LINES.join("\n"); return; }
+    var i = 0, j = 0, out = "";
+    function tick(){
+      if(i >= LINES.length){ el.innerHTML = out + "<span class='caret'>&nbsp;</span>"; return; }
+      var line = LINES[i];
+      // step over html tags in one go so they never render half-written
+      if(line.charAt(j) === "<"){ j = line.indexOf(">", j) + 1; }
+      else { j++; }
+      out = LINES.slice(0, i).join("\n") + (i ? "\n" : "") + line.slice(0, j);
+      el.innerHTML = out + "<span class='caret'>&nbsp;</span>";
+      if(j >= line.length){ i++; j = 0; setTimeout(tick, 170); }
+      else setTimeout(tick, 16);
     }
-    btns.forEach(function(b){ b.addEventListener("click", function(){ show(b.dataset.k); }); });
+    tick();
+  })();
+
+  /* ═════ frame switchers ═════ */
+  function switcher(id){
+    var stage = document.getElementById(id);
+    if(!stage) return;
+    var frames = stage.querySelectorAll(".frame-img");
+    var btns = stage.parentNode.querySelectorAll(".controls button");
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){
+        frames.forEach(function(f){ f.classList.toggle("on", f.dataset.k === b.dataset.k); });
+        btns.forEach(function(o){ o.setAttribute("aria-pressed", String(o === b)); });
+      });
+    });
   }
   switcher("trStage");
   switcher("tnStage");
 
-  /* ══ shoe spinner ══ */
+  /* ═════ shoe spinner ═════ */
   (function(){
     var box = document.getElementById("spin");
     if(!box) return;
     var imgs = box.querySelectorAll("img[data-i]");
     var deg = document.getElementById("deg");
     var ctl = document.getElementById("shCtl");
-    var btns = ctl ? ctl.querySelectorAll("button") : [];
+    var btns = ctl.querySelectorAll("button[data-i]");
     var extra = [document.getElementById("shTop"), document.getElementById("shSole")];
-    var N = imgs.length, idx = 0, dragging = false, startX = 0, startIdx = 0;
+    var N = imgs.length, idx = 0, dragging = false, sx = 0, si = 0;
 
-    function pad(n){ return ("000" + n).slice(-3); }
     function paint(){
       imgs.forEach(function(im){ im.classList.toggle("on", Number(im.dataset.i) === idx); });
       btns.forEach(function(b){ b.setAttribute("aria-pressed", String(Number(b.dataset.i) === idx)); });
       extra.forEach(function(b){ if(b) b.setAttribute("aria-pressed", "false"); });
-      if(deg) deg.textContent = pad(Math.round(idx * (360 / N))) + "°";
+      if(deg) deg.textContent = ("00" + Math.round(idx * (360 / N))).slice(-3) + "°";
     }
     function setIdx(i){ idx = ((i % N) + N) % N; paint(); }
-
     function clearExtra(){
-      var tmp = box.querySelector("img.extra");
-      if(tmp) tmp.classList.remove("on");
+      var t = box.querySelector("img.extra");
+      if(t) t.classList.remove("on");
     }
     box.addEventListener("pointerdown", function(e){
-      clearExtra();
-      dragging = true; startX = e.clientX; startIdx = idx;
+      clearExtra(); dragging = true; sx = e.clientX; si = idx;
       if(box.setPointerCapture) box.setPointerCapture(e.pointerId);
     });
     box.addEventListener("pointermove", function(e){
       if(!dragging) return;
-      var stepPx = Math.max(26, box.clientWidth / (N * 1.7));
-      setIdx(startIdx + Math.round((e.clientX - startX) / stepPx));
+      var step = Math.max(24, box.clientWidth / (N * 1.7));
+      setIdx(si + Math.round((e.clientX - sx) / step));
     });
     ["pointerup","pointercancel","pointerleave"].forEach(function(ev){
       box.addEventListener(ev, function(){ dragging = false; });
@@ -719,160 +805,206 @@
     btns.forEach(function(b){
       b.addEventListener("click", function(){ clearExtra(); setIdx(Number(b.dataset.i)); });
     });
-
-    function swapTo(src, btn){
+    function swap(src, btn){
       imgs.forEach(function(im){ im.classList.remove("on"); });
-      var tmp = box.querySelector("img.extra");
-      if(!tmp){
-        tmp = document.createElement("img");
-        tmp.className = "extra";
-        box.insertBefore(tmp, box.firstChild);
-      }
-      tmp.src = src;
-      tmp.alt = btn.textContent + " of the FLOW R1.";
-      tmp.classList.add("on");
+      var t = box.querySelector("img.extra");
+      if(!t){ t = document.createElement("img"); t.className = "extra"; box.appendChild(t); }
+      t.src = src; t.alt = btn.textContent + " of the FLOW R1.";
+      t.classList.add("on");
       btns.forEach(function(b){ b.setAttribute("aria-pressed", "false"); });
       extra.forEach(function(b){ if(b) b.setAttribute("aria-pressed", String(b === btn)); });
       if(deg) deg.textContent = btn.textContent.toUpperCase();
     }
-    if(extra[0]) extra[0].addEventListener("click", function(){ swapTo("img/shoe-top.jpg", extra[0]); });
-    if(extra[1]) extra[1].addEventListener("click", function(){ swapTo("img/shoe-outsole.jpg", extra[1]); });
+    if(extra[0]) extra[0].addEventListener("click", function(){ swap("img/shoe-top.jpg", extra[0]); });
+    if(extra[1]) extra[1].addEventListener("click", function(){ swap("img/shoe-outsole.jpg", extra[1]); });
     paint();
   })();
 
-  /* ══ three.js bottle ══ */
+  if(typeof THREE === "undefined"){
+    var c3 = document.getElementById("bottle3d");
+    if(c3) c3.outerHTML = '<div class="fallback">3D MODULE OFFLINE — renderer unavailable.</div>';
+    return;
+  }
+
+  /* ═════ volumetric tunnel backdrop ═════ */
+  (function(){
+    var cv = document.getElementById("bg");
+    if(!cv || reduced) return;
+    var rnd;
+    try{ rnd = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); }
+    catch(e){ return; }
+    rnd.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+
+    var sc = new THREE.Scene();
+    sc.fog = new THREE.FogExp2(0x020508, 0.034);
+    var cam = new THREE.PerspectiveCamera(66, 1, 0.1, 220);
+    cam.position.set(0, 0, 0);
+
+    var RINGS = 30, SPACING = 4.4, DEPTH = RINGS * SPACING;
+    var ringMat = new THREE.LineBasicMaterial({ color: 0x00d4e6, transparent: true, opacity: 0.30 });
+    var ringMat2 = new THREE.LineBasicMaterial({ color: 0xcdf000, transparent: true, opacity: 0.22 });
+    var rings = [];
+    function ringGeo(R, seg){
+      var pts = [];
+      for(var a = 0; a <= seg; a++){
+        var t = a / seg * Math.PI * 2;
+        pts.push(new THREE.Vector3(Math.cos(t) * R, Math.sin(t) * R, 0));
+      }
+      return new THREE.BufferGeometry().setFromPoints(pts);
+    }
+    var geoA = ringGeo(13, 8), geoB = ringGeo(13, 48);
+    for(var i = 0; i < RINGS; i++){
+      var ln = new THREE.LineLoop(i % 5 === 0 ? geoB : geoA, i % 5 === 0 ? ringMat2 : ringMat);
+      ln.position.z = -i * SPACING;
+      ln.rotation.z = i * 0.11;
+      sc.add(ln); rings.push(ln);
+    }
+
+    var PN = 420, pos = new Float32Array(PN * 3);
+    for(var k = 0; k < PN; k++){
+      var ang = Math.random() * Math.PI * 2, rad = 2 + Math.random() * 12;
+      pos[k*3] = Math.cos(ang) * rad;
+      pos[k*3+1] = Math.sin(ang) * rad;
+      pos[k*3+2] = -Math.random() * DEPTH;
+    }
+    var pg = new THREE.BufferGeometry();
+    pg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    var pts = new THREE.Points(pg, new THREE.PointsMaterial({
+      color: 0x7fe9f5, size: 0.11, transparent: true, opacity: 0.5, sizeAttenuation: true
+    }));
+    sc.add(pts);
+
+    var mx = 0, my = 0;
+    window.addEventListener("pointermove", function(e){
+      mx = (e.clientX / window.innerWidth - 0.5);
+      my = (e.clientY / window.innerHeight - 0.5);
+    });
+
+    function size(){
+      var w = window.innerWidth, h = window.innerHeight;
+      rnd.setSize(w, h, false);
+      cam.aspect = w / h; cam.updateProjectionMatrix();
+    }
+    size();
+    window.addEventListener("resize", size);
+
+    var arr = pg.attributes.position.array;
+    function loop(){
+      for(var i = 0; i < rings.length; i++){
+        var r = rings[i];
+        r.position.z += 0.085;
+        r.rotation.z += 0.0009;
+        if(r.position.z > 3) r.position.z -= DEPTH;
+      }
+      for(var k = 0; k < PN; k++){
+        arr[k*3+2] += 0.13;
+        if(arr[k*3+2] > 2) arr[k*3+2] -= DEPTH;
+      }
+      pg.attributes.position.needsUpdate = true;
+      cam.position.x += (mx * 2.2 - cam.position.x) * 0.035;
+      cam.position.y += (-my * 1.6 - cam.position.y) * 0.035;
+      cam.lookAt(0, 0, -40);
+      rnd.render(sc, cam);
+      requestAnimationFrame(loop);
+    }
+    loop();
+  })();
+
+  /* ═════ bottle ═════ */
   (function(){
     var canvas = document.getElementById("bottle3d");
     if(!canvas) return;
-    if(typeof THREE === "undefined"){
-      canvas.outerHTML = '<div class="fallback">3D MODULE OFFLINE — renderer unavailable.</div>';
-      return;
-    }
-
     var PALETTE = {
-      lime:  ["#CDF000", "#0FC9DC"],
-      blue:  ["#12D3E8", "#0B3FAE"],
-      black: ["#3A4145", "#14181A"],
-      sand:  ["#E2B98C", "#A86F3C"]
+      lime:["#CDF000","#0FC9DC"], blue:["#12D3E8","#0B3FAE"],
+      black:["#3A4145","#14181A"], sand:["#E2B98C","#A86F3C"]
     };
-
-    function gradientTexture(pair){
+    function tex(pair){
       var c = document.createElement("canvas");
       c.width = 16; c.height = 256;
       var g = c.getContext("2d");
       var lg = g.createLinearGradient(0, 0, 0, 256);
-      lg.addColorStop(0, pair[1]);
-      lg.addColorStop(1, pair[0]);
+      lg.addColorStop(0, pair[1]); lg.addColorStop(1, pair[0]);
       g.fillStyle = lg; g.fillRect(0, 0, 16, 256);
-      g.globalAlpha = 0.17; g.fillStyle = "#ffffff";
-      for(var y = 8; y < 256; y += 13){ g.fillRect(0, y, 16, 1.4); }
-      var tex = new THREE.CanvasTexture(c);
-      tex.wrapS = THREE.RepeatWrapping;
-      tex.needsUpdate = true;
-      return tex;
+      g.globalAlpha = 0.17; g.fillStyle = "#fff";
+      for(var y = 8; y < 256; y += 13) g.fillRect(0, y, 16, 1.4);
+      var t = new THREE.CanvasTexture(c);
+      t.wrapS = THREE.RepeatWrapping; t.needsUpdate = true;
+      return t;
     }
-
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-    camera.position.set(0, 0.2, 13.6);
+    var cam = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    cam.position.set(0, 0.2, 13.6);
+    var rnd;
+    try{ rnd = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); }
+    catch(e){ canvas.outerHTML = '<div class="fallback">3D MODULE OFFLINE — WebGL unavailable.</div>'; return; }
+    rnd.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-    var renderer;
-    try{
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-    }catch(err){
-      canvas.outerHTML = '<div class="fallback">3D MODULE OFFLINE — WebGL unavailable.</div>';
-      return;
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    var prof = [];
+    function p(x, y){ prof.push(new THREE.Vector2(x, y)); }
+    p(0,-3.30); p(1.28,-3.30); p(1.42,-3.16); p(1.46,-2.92);
+    p(1.46,1.26); p(1.44,1.62); p(1.33,1.96); p(1.10,2.28);
+    p(0.84,2.56); p(0.70,2.82); p(0.66,3.08);
 
-    var profile = [];
-    function p(x, y){ profile.push(new THREE.Vector2(x, y)); }
-    p(0.00, -3.30); p(1.28, -3.30); p(1.42, -3.16); p(1.46, -2.92);
-    p(1.46,  1.26); p(1.44,  1.62); p(1.33,  1.96); p(1.10,  2.28);
-    p(0.84,  2.56); p(0.70,  2.82); p(0.66,  3.08);
-
-    var bodyMat = new THREE.MeshStandardMaterial({
-      map: gradientTexture(PALETTE.lime), metalness: 0.44, roughness: 0.32
-    });
-    var body = new THREE.Mesh(new THREE.LatheGeometry(profile, 96), bodyMat);
-
-    var darkMat = new THREE.MeshStandardMaterial({ color: 0x14181b, metalness: 0.5, roughness: 0.5 });
-    var cap = new THREE.Mesh(new THREE.CylinderGeometry(0.80, 0.74, 0.74, 48), darkMat);
-    cap.position.y = 3.40;
-    var collar = new THREE.Mesh(new THREE.CylinderGeometry(0.70, 0.70, 0.18, 48), darkMat);
-    collar.position.y = 3.02;
-    var loop = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.075, 12, 40, Math.PI * 1.25), darkMat);
-    loop.position.set(0.32, 3.62, 0);
-    loop.rotation.set(Math.PI / 2, 0, -0.5);
-    var base = new THREE.Mesh(new THREE.CylinderGeometry(1.30, 1.22, 0.40, 48), darkMat);
-    base.position.y = -3.48;
-
+    var bodyMat = new THREE.MeshStandardMaterial({ map: tex(PALETTE.lime), metalness: 0.44, roughness: 0.32 });
+    var dark = new THREE.MeshStandardMaterial({ color: 0x14181b, metalness: 0.5, roughness: 0.5 });
+    var g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.LatheGeometry(prof, 96), bodyMat));
+    var cap = new THREE.Mesh(new THREE.CylinderGeometry(0.80, 0.74, 0.74, 48), dark); cap.position.y = 3.40;
+    var col = new THREE.Mesh(new THREE.CylinderGeometry(0.70, 0.70, 0.18, 48), dark); col.position.y = 3.02;
+    var loop2 = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.075, 12, 40, Math.PI * 1.25), dark);
+    loop2.position.set(0.32, 3.62, 0); loop2.rotation.set(Math.PI/2, 0, -0.5);
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(1.30, 1.22, 0.40, 48), dark); base.position.y = -3.48;
     var ringMat = new THREE.MeshBasicMaterial({ color: 0x35e6ff });
     var ring = new THREE.Mesh(new THREE.TorusGeometry(1.47, 0.045, 10, 72), ringMat);
-    ring.position.y = -2.62;
-    ring.rotation.x = Math.PI / 2;
-
-    var bottle = new THREE.Group();
-    bottle.add(body, cap, collar, loop, base, ring);
-    bottle.rotation.x = 0.06;
-    scene.add(bottle);
+    ring.position.y = -2.62; ring.rotation.x = Math.PI / 2;
+    g.add(cap, col, loop2, base, ring);
+    g.rotation.x = 0.06;
+    scene.add(g);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-    var key = new THREE.DirectionalLight(0xffffff, 1.05); key.position.set(4, 6, 7);
-    var fill = new THREE.DirectionalLight(0x9fe8ff, 0.45); fill.position.set(-6, 1, 4);
-    var rim = new THREE.DirectionalLight(0xcdf000, 0.42); rim.position.set(-2, -4, -6);
-    scene.add(key, fill, rim);
+    var k1 = new THREE.DirectionalLight(0xffffff, 1.05); k1.position.set(4, 6, 7);
+    var k2 = new THREE.DirectionalLight(0x9fe8ff, 0.45); k2.position.set(-6, 1, 4);
+    var k3 = new THREE.DirectionalLight(0xcdf000, 0.42); k3.position.set(-2, -4, -6);
+    scene.add(k1, k2, k3);
 
-    function resize(){
-      var w = canvas.clientWidth || canvas.parentNode.clientWidth || 400;
-      var h = canvas.clientHeight || 440;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
+    function size(){
+      var w = canvas.clientWidth || 400, h = canvas.clientHeight || 400;
+      rnd.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
     }
-
-    var spin = true, dragging = false, lastX = 0, vel = 0.0042;
+    var spin = true, drag = false, lx = 0, vel = 0.0042;
     canvas.addEventListener("pointerdown", function(e){
-      dragging = true; spin = false; lastX = e.clientX;
+      drag = true; spin = false; lx = e.clientX;
       if(canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
     });
     canvas.addEventListener("pointermove", function(e){
-      if(!dragging) return;
-      var d = (e.clientX - lastX) * 0.0092;
-      bottle.rotation.y += d; vel = d; lastX = e.clientX;
+      if(!drag) return;
+      var d = (e.clientX - lx) * 0.0092;
+      g.rotation.y += d; vel = d; lx = e.clientX;
     });
     ["pointerup","pointercancel","pointerleave"].forEach(function(ev){
       canvas.addEventListener(ev, function(){
-        if(!dragging) return;
-        dragging = false;
+        if(!drag) return;
+        drag = false;
         setTimeout(function(){ spin = true; vel = 0.0042; }, 1400);
       });
     });
-
     function frame(){
-      if(spin && !reduced) bottle.rotation.y += vel;
-      renderer.render(scene, camera);
+      if(spin && !reduced) g.rotation.y += vel;
+      rnd.render(scene, cam);
       requestAnimationFrame(frame);
     }
-    resize();
-    window.addEventListener("resize", resize);
-    frame();
+    size(); window.addEventListener("resize", size); frame();
 
     var ctl = document.getElementById("btCtl");
-    if(ctl){
-      ctl.querySelectorAll("button").forEach(function(b){
-        b.addEventListener("click", function(){
-          var pair = PALETTE[b.dataset.c] || PALETTE.lime;
-          if(bodyMat.map) bodyMat.map.dispose();
-          bodyMat.map = gradientTexture(pair);
-          bodyMat.needsUpdate = true;
-          ringMat.color.set(b.dataset.c === "sand" ? 0xffcf8a : 0x35e6ff);
-          ctl.querySelectorAll("button").forEach(function(o){
-            o.setAttribute("aria-pressed", String(o === b));
-          });
-        });
+    if(ctl) ctl.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click", function(){
+        var pair = PALETTE[b.dataset.c] || PALETTE.lime;
+        if(bodyMat.map) bodyMat.map.dispose();
+        bodyMat.map = tex(pair); bodyMat.needsUpdate = true;
+        ringMat.color.set(b.dataset.c === "sand" ? 0xffcf8a : 0x35e6ff);
+        ctl.querySelectorAll("button").forEach(function(o){ o.setAttribute("aria-pressed", String(o === b)); });
       });
-    }
+    });
   })();
 })();
 </script>
