@@ -84,7 +84,7 @@ def _fonts(page):
 
 
 def patch(page, search, lines, *, bold_first=False, color=None,
-          head_color=None, size=None, leading=1.30, pad=0.8,
+          head_color=None, size=None, leading=1.30, pad=0.35,
           invert=False, face="outfit"):
     """يغطّي الكتلة المعطوبة ويعيد كتابة السطور الصحيحة مكانها."""
     box = detect_bbox(page, search, invert=invert)
