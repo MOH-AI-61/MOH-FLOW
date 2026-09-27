@@ -1,0 +1,646 @@
+<title>ملف توريد FLOW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root{
+    --paper:#FAFCFC;
+    --surface:#FFFFFF;
+    --sunk:#F1F6F7;
+    --ink:#0E1619;
+    --ink-2:#3C4C51;
+    --muted:#6A7B80;
+    --rule:#DBE4E6;
+    --rule-soft:#EBF1F2;
+    --cyan:#007C88;
+    --cyan-bright:#00C4D4;
+    --lime:#7D9A00;
+    --lime-bright:#D4F000;
+    --flag:#A8420D;
+    --flag-bg:#FCF0E9;
+    --flag-rule:#EBCBB6;
+    --ok:#0F7A5A;
+
+    --sans:"IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --step--1:0.80rem;
+    --step-0:1rem;
+    --step-1:1.22rem;
+    --step-2:1.55rem;
+    --step-3:2.05rem;
+    --step-4:2.7rem;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --paper:#0A1012;
+      --surface:#111A1D;
+      --sunk:#0E1618;
+      --ink:#E9F1F2;
+      --ink-2:#B5C5C8;
+      --muted:#7F9296;
+      --rule:#233236;
+      --rule-soft:#1A2427;
+      --cyan:#45DDE9;
+      --cyan-bright:#00C4D4;
+      --lime:#C2E82C;
+      --lime-bright:#D4F000;
+      --flag:#FF9C64;
+      --flag-bg:#251409;
+      --flag-rule:#48250F;
+      --ok:#42C79B;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#0A1012;
+    --surface:#111A1D;
+    --sunk:#0E1618;
+    --ink:#E9F1F2;
+    --ink-2:#B5C5C8;
+    --muted:#7F9296;
+    --rule:#233236;
+    --rule-soft:#1A2427;
+    --cyan:#45DDE9;
+    --cyan-bright:#00C4D4;
+    --lime:#C2E82C;
+    --lime-bright:#D4F000;
+    --flag:#FF9C64;
+    --flag-bg:#251409;
+    --flag-rule:#48250F;
+    --ok:#42C79B;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:var(--step-0);
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .doc{
+    direction:rtl;
+    text-align:right;
+    max-width:920px;
+    margin:0 auto;
+    padding-inline:20px;
+    padding-block:0 80px;
+  }
+
+  .mast{padding-block:44px 30px;border-bottom:1px solid var(--rule)}
+  .brandbar{
+    height:8px;border-radius:99px;
+    background:linear-gradient(-105deg, var(--lime-bright), var(--cyan-bright));
+    margin-bottom:26px;
+  }
+  .kicker{
+    font-family:var(--mono);font-size:var(--step--1);
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--cyan);margin:0 0 12px;
+  }
+  h1{
+    font-size:var(--step-4);line-height:1.14;font-weight:700;
+    letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance;
+  }
+  .standfirst{
+    font-size:var(--step-1);line-height:1.62;color:var(--ink-2);
+    font-weight:300;margin:0;max-width:62ch;
+  }
+  .mast-meta{
+    display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:26px;
+    font-family:var(--mono);font-size:var(--step--1);color:var(--muted);
+  }
+  .mast-meta b{color:var(--ink-2);font-weight:500}
+
+  section{padding-block:46px;border-bottom:1px solid var(--rule-soft)}
+  section:last-of-type{border-bottom:0}
+
+  .eyebrow{
+    font-family:var(--mono);font-size:var(--step--1);
+    letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 10px;
+  }
+  h2{
+    font-size:var(--step-3);line-height:1.2;font-weight:600;
+    letter-spacing:-.01em;margin:0 0 18px;text-wrap:balance;
+  }
+  h3{font-size:var(--step-1);font-weight:600;margin:34px 0 12px;line-height:1.4}
+  p{margin:0 0 16px;max-width:66ch}
+  strong{font-weight:600}
+  a{color:var(--cyan);text-underline-offset:3px}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px}
+
+  .verdict{
+    background:var(--surface);border:1px solid var(--rule);
+    border-right:4px solid var(--cyan-bright);border-radius:4px;
+    padding:24px 26px;margin:0 0 30px;
+  }
+  .verdict p:last-child{margin-bottom:0}
+  .verdict .lead{font-size:var(--step-1);font-weight:600;line-height:1.5;margin-bottom:12px}
+
+  .caution{
+    background:var(--flag-bg);border:1px solid var(--flag-rule);
+    border-radius:4px;padding:20px 22px;margin:0 0 30px;
+  }
+  .caution p{margin:0;color:var(--ink-2);max-width:none}
+  .caution p + p{margin-top:10px}
+  .caution .tag{
+    display:block;font-family:var(--mono);font-size:var(--step--1);
+    letter-spacing:.1em;text-transform:uppercase;color:var(--flag);
+    margin-bottom:8px;font-weight:500;
+  }
+
+  .specs{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
+    gap:1px;background:var(--rule);border:1px solid var(--rule);
+    border-radius:4px;overflow:hidden;margin:0 0 14px;
+  }
+  .spec{background:var(--surface);padding:16px 18px}
+  .spec dt{
+    font-family:var(--mono);font-size:var(--step--1);
+    letter-spacing:.07em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:5px;
+  }
+  .spec dd{
+    margin:0;font-family:var(--mono);font-size:1.02rem;font-weight:500;
+    color:var(--ink);line-height:1.45;font-variant-numeric:tabular-nums;
+  }
+  .spec dd small{
+    display:block;font-family:var(--sans);font-size:var(--step--1);
+    font-weight:400;color:var(--muted);margin-top:4px;line-height:1.5;
+  }
+
+  .swatches{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 26px}
+  .sw{
+    display:flex;align-items:center;gap:11px;background:var(--surface);
+    border:1px solid var(--rule);border-radius:4px;padding:9px 15px 9px 9px;
+  }
+  .chip{width:34px;height:34px;border-radius:3px;flex:none;border:1px solid rgba(0,0,0,.14)}
+  .sw-txt{font-family:var(--mono);font-size:var(--step--1);line-height:1.45}
+  .sw-txt b{display:block;font-weight:600;color:var(--ink);font-size:.86rem}
+  .sw-txt span{color:var(--muted)}
+
+  figure{margin:26px 0;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--sunk)}
+  figure img{display:block;width:100%;max-width:100%;height:auto}
+  figcaption{
+    padding:11px 16px;font-family:var(--mono);font-size:var(--step--1);
+    color:var(--muted);border-top:1px solid var(--rule);
+    background:var(--surface);line-height:1.5;
+  }
+
+  .scroller{overflow-x:auto;margin:0 0 14px;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:600px;font-size:.935rem}
+  th,td{padding:12px 15px;text-align:right;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  thead th{
+    font-family:var(--mono);font-size:var(--step--1);letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);font-weight:500;
+    background:var(--sunk);border-bottom:1px solid var(--rule);white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.name{font-weight:600;white-space:nowrap}
+  td.moq{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)}
+  .region-row td{
+    background:var(--sunk);font-family:var(--mono);font-size:var(--step--1);
+    letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);
+    font-weight:500;padding-block:9px;
+  }
+  .note{font-size:var(--step--1);color:var(--muted);margin:0 0 4px;max-width:70ch}
+
+  .rfq-head{
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:12px;background:var(--sunk);
+    border:1px solid var(--rule);border-bottom:0;
+    border-radius:4px 4px 0 0;padding:12px 16px;
+  }
+  .rfq-head span{
+    font-family:var(--mono);font-size:var(--step--1);
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  }
+  button.copy{
+    font-family:var(--mono);font-size:var(--step--1);letter-spacing:.06em;
+    text-transform:uppercase;background:var(--ink);color:var(--paper);
+    border:0;border-radius:3px;padding:8px 16px;cursor:pointer;
+    transition:opacity .15s ease;
+  }
+  button.copy:hover{opacity:.82}
+  button.copy[data-done="1"]{background:var(--ok)}
+  pre.rfq{
+    direction:ltr;text-align:left;margin:0 0 14px;background:var(--surface);
+    border:1px solid var(--rule);border-radius:0 0 4px 4px;padding:20px 18px;
+    overflow-x:auto;font-family:var(--mono);font-size:.845rem;
+    line-height:1.62;color:var(--ink-2);white-space:pre;tab-size:2;
+  }
+
+  ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+  ol.steps li{
+    counter-increment:s;position:relative;padding-inline-start:44px;
+    padding-block:0 20px;max-width:68ch;
+  }
+  ol.steps li::before{
+    content:counter(s,decimal-leading-zero);position:absolute;
+    inset-inline-start:0;top:2px;font-family:var(--mono);
+    font-size:var(--step--1);font-weight:600;color:var(--cyan);
+  }
+  ol.steps b{display:block;margin-bottom:2px}
+  ol.steps p{margin:0;color:var(--ink-2)}
+
+  ul.plain{margin:0 0 16px;padding-inline-start:20px;max-width:66ch}
+  ul.plain li{margin-bottom:8px}
+
+  .mono{font-family:var(--mono);font-size:.93em;font-variant-numeric:tabular-nums}
+  .bad{color:var(--flag);font-weight:600}
+
+  footer{
+    padding-block:34px 0;border-top:1px solid var(--rule);
+    color:var(--muted);font-size:var(--step--1);line-height:1.7;
+  }
+  footer p{max-width:70ch}
+
+  @media (max-width:560px){
+    :root{--step-4:2.1rem;--step-3:1.65rem;--step-2:1.35rem;--step-1:1.12rem}
+    .doc{padding-inline:16px}
+    pre.rfq{font-size:.78rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="doc">
+
+  <header class="mast">
+    <div class="brandbar"></div>
+    <p class="kicker">FLOW · Energy in Motion</p>
+    <h1>ملف توريد FLOW</h1>
+    <p class="standfirst">قراءة كاملة للـ31 صفحة في <span class="mono">FLOW.pdf</span>: جرد كل الموديلات واللونيات، المواصفات المستخرجة من التك-باك، خلل واحد يجب إصلاحه قبل مخاطبة أي مصنع، قائمة مصانع مرشّحة، ورسالة طلب تسعير جاهزة.</p>
+    <div class="mast-meta">
+      <span>المصدر <b>FLOW.pdf · 31 صفحة</b></span>
+      <span>محتوى <b>28 صفحة · 3 فارغة</b></span>
+      <span>طبقة نص <b>صفر — كلها صور</b></span>
+      <span>التاريخ <b>27 سبتمبر 2026</b></span>
+    </div>
+  </header>
+
+  <section>
+    <p class="eyebrow">جرد الملف</p>
+    <h2>ما في العرض فعلاً</h2>
+    <p>العرض ليس مجموعة ملابس واحدة — هو نظام علامة كامل يضمّ خمسة منتجات في خمس سلاسل توريد مختلفة. هذا الجرد يحدّد ما يخصّ سؤالك عن مصانع الملابس، وما لا يخصّه.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>المنتج</th><th>القطع</th><th>اللونيات</th><th>الصفحات</th><th>جاهزية التصنيع</th></tr>
+        </thead>
+        <tbody>
+          <tr class="region-row"><td colspan="5">ملابس — هذا ما تسأل عنه</td></tr>
+          <tr>
+            <td class="name">طقم التدريب</td>
+            <td>برا رياضية + ليقنز عالي الخصر</td>
+            <td class="moq">4</td>
+            <td class="moq">4، 9، 15–18</td>
+            <td>تك-باك كامل بخياطات ISO ومقاسات وشهادات</td>
+          </tr>
+          <tr>
+            <td class="name">مجموعة التنس</td>
+            <td>برا بظهر شبكي + سكورت بشورت داخلي</td>
+            <td class="moq">2</td>
+            <td class="moq">19–22</td>
+            <td>وصف بناء وطبقات، بلا رسومات مسطّحة ولا أكواد خياطة</td>
+          </tr>
+          <tr class="region-row"><td colspan="5">ليست ملابس — مصانع أخرى تماماً</td></tr>
+          <tr><td class="name">قنينة FLOW</td><td>ستانلس مفرّغ 750 مل و1 لتر، LED، USB-C، تطبيق</td><td class="moq">—</td><td class="moq">25–28</td><td>مصنع معادن وإلكترونيات</td></tr>
+          <tr><td class="name">حذاء FLOW R1</td><td>شبك جاكار، EVA/PEBA، مقاسات 36–46 يونيسكس</td><td class="moq">4</td><td class="moq">29</td><td>مصنع أحذية — قالب واحد بآلاف الدولارات</td></tr>
+          <tr><td class="name">جوارب AIRKNIT</td><td>3 ارتفاعات، مقدّمة بلا خياطة، خيط أيون فضي</td><td class="moq">4</td><td class="moq">30</td><td>مصنع جوارب بحياكة دائرية</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">الصفحات 23 و28 و31 فارغة تماماً (صفر صور). الصفحات 1–8 و10–14 و24 حملات تسويقية بلا مواصفات.</p>
+
+    <h3>اللونيات الأربع لطقم التدريب</h3>
+    <div class="swatches">
+      <div class="sw"><span class="chip" style="background:linear-gradient(135deg,#D4F000,#00C4D4)"></span><span class="sw-txt"><b>ليموني ← سماوي</b><span>تك-باك كامل · ص 15–18</span></span></div>
+      <div class="sw"><span class="chip" style="background:linear-gradient(135deg,#FF2D9A,#7A2CFF)"></span><span class="sw-txt"><b>وردي ← بنفسجي</b><span>رسم مسطّح · ص 9</span></span></div>
+      <div class="sw"><span class="chip" style="background:linear-gradient(135deg,#1E4FD8,#4E86F7)"></span><span class="sw-txt"><b>أزرق ملكي</b><span>صورة حملة فقط · ص 24</span></span></div>
+      <div class="sw"><span class="chip" style="background:linear-gradient(135deg,#FFFFFF,#CFEFF5)"></span><span class="sw-txt"><b>أبيض بخطوط</b><span>تنس · ص 20</span></span></div>
+    </div>
+    <p>اللونية الزرقاء ظهرت في صورة حملة واحدة بلا رسم مسطّح ولا أكواد لون — فهي ليست جاهزة للتصنيع. والأبيض بخطوط ليموني وسماوي تحدٍّ مختلف: خطوط رفيعة على أرضية بيضاء، لا تدرّج. الأبيض يكشف كل عيب في القصّ والخياطة، والخطوط الرفيعة تحتاج دقّة تسجيل أعلى من التدرّج.</p>
+
+    <figure>
+      <img src="assets/colorway-pink.jpg" alt="رسم مسطّح للونية الوردي-البنفسجي: برا رياضية وليقنز من أربع زوايا، مع أكواد الألوان وإشارات خياطة الفلاتلوك.">
+      <figcaption>ص 9 — اللونية الثانية، وردي إلى بنفسجي. لاحظ الشبك الرمادي في ظهر البرا.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <p class="eyebrow">أوقف كل شيء</p>
+    <h2>خلل يمنع التصنيع</h2>
+
+    <div class="caution">
+      <p class="tag">أصلح هذا قبل مخاطبة أي مصنع</p>
+      <p>العرض يطلب دقّة لون عند <span class="mono">ΔE ≤ 2.0</span> — وهذا سماح صارم. لكنه لا يعطي أي كود Pantone حقيقي يحقّقه.</p>
+    </div>
+
+    <p>ما في الملف مكتوب هكذا، وهو <strong>غير قابل للتنفيذ</strong>:</p>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>الصفحة</th><th>ما هو مكتوب</th><th>المشكلة</th></tr></thead>
+        <tbody>
+          <tr><td class="moq">9</td><td class="mono">PANTONE #FF2D9A<br>PANTONE #7A2CFF</td><td>هذه أكواد HEX للشاشات، لا أكواد Pantone. كلمة PANTONE قبلها لا تجعلها كذلك.</td></tr>
+          <tr><td class="moq">15، 18</td><td class="mono">PANTONE #108B48<br>PANTONE #137281</td><td>أكواد HEX أيضاً. و<span class="bad">لونها الفعلي أخضر داكن ورمادي مزرقّ</span> — لا يطابق المربّعات السماوية والليمونية المعروضة بجانبها.</td></tr>
+          <tr><td class="moq">17</td><td class="mono">Pantone 108848<br>Pantone 137281</td><td>نفس الأرقام بلا <span class="mono">#</span> وبرقم مختلف في الأول. ثلاث صفحات، ثلاث صيغ.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>لماذا يهمّ:</strong> المصنع يصبغ ويطبع على قماش، لا على شاشة. كود HEX لا يُترجم إلى صبغة، والفرق بين ما تراه على شاشتك وما يخرج من المطبعة قد يتجاوز <span class="mono">ΔE 10</span>. ولو أرسلت الملف كما هو، فستحصل على أحد جوابين: إمّا سؤال يعيدك إلى الصفر، أو — وهو الأسوأ — إنتاج بلون اجتهده المصنع بنفسه.</p>
+
+    <h3>الحل</h3>
+    <ul class="plain">
+      <li><strong>حوّل كل لون إلى Pantone TCX</strong> — سلسلة TCX هي القطنية/النسيجية، وهي المرجع الذي يعمل به مصنّعو الملابس. سلسلة TPX ورقية وتُستعمل للتصميم لا للإنتاج.</li>
+      <li><strong>أو أرسل عيّنة قماش مصبوغة</strong> بالتدرّج الذي تريده. هذه أدقّ من أي رقم، والمصنع يطابق عليها مباشرة.</li>
+      <li><strong>وثبّت نقطتَي التدرّج فقط</strong> — البداية والنهاية — ودع المصنع يبني الانتقال بينهما. تحديد كل نقطة في التدرّج يستحيل ضبطه.</li>
+    </ul>
+
+    <p class="note">خلل أصغر في نفس السياق: الرسومات المسطّحة مكتوب عليها <span class="mono">SIZE: XG</span> بينما جدول المقاسات <span class="mono">XS–XL</span>. وحّدهما قبل الإرسال — الرسم المسطّح يُقاس عليه الباترون.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">الخلاصة</p>
+    <h2>نوع المصنع الذي تحتاجه</h2>
+
+    <div class="verdict">
+      <p class="lead">مصنع <strong>قصّ وخياطة</strong> للملابس الأدائية، عنده <strong>طباعة تصعيدية كاملة داخلية</strong>.</p>
+      <p>التك-باك يحسم الأمر: <span class="mono">Flatlock ISO 607</span> و<span class="mono">Overlock ISO 514</span> و<span class="mono">Coverstitch ISO 406</span>. هذه خياطة قطع مقصوصة — <strong>وليست حياكة Seamless</strong>. فكل مصانع الـSeamless التي تعمل بمكائن Santoni الدائرية خارج الحسبة، مهما مدحوا أنفسهم.</p>
+      <p>والفلتر الثاني أهمّ: التك-باك ينصّ على أن <strong>الطباعة تُطبع على الأقمشة قبل القصّ والخياطة</strong>، بتدرّج متصل عبر القطع. هذا يستبعد أي مصنع يُرسل الطباعة لمقاول خارجي — لأن محاذاة التدرّج عبر الدرزات، ودقّة اللون، تنهاران حين يمرّ العمل بورشتين.</p>
+    </div>
+
+    <p><strong>سؤالك الأول لأي مصنع:</strong> هل الطباعة التصعيدية داخل مصنعكم أم عند مقاول؟ إن كانت عند مقاول، أغلق المحادثة.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">ما ينصّ عليه الملف</p>
+    <h2>المواصفات المستخرجة</h2>
+    <p>مجمّعة من صفحات 4 و15 و16 و17. لا تحتاج إعادة كتابة — المصنع يقرأها كما هي.</p>
+
+    <dl class="specs">
+      <div class="spec"><dt>التركيب</dt><dd>88% Polyester<br>12% Spandex</dd></div>
+      <div class="spec"><dt>وزن القماش</dt><dd>220–260 GSM</dd></div>
+      <div class="spec"><dt>طول الساق</dt><dd>Inseam 68 cm<small>خصر عالٍ، ضغط متوسط، قَصّة رياضية</small></dd></div>
+      <div class="spec"><dt>الطباعة</dt><dd>All-Over Sublimation<small>قبل القصّ والخياطة</small></dd></div>
+      <div class="spec"><dt>الخياطة الرئيسية</dt><dd>ISO 514<small>أوفرلوك 4 خيوط — الدرزات والحزام المطاطي</small></dd></div>
+      <div class="spec"><dt>الحواف</dt><dd>ISO 406<small>كوفرستيتش — الرقبة والإبط وتثبيت الحزام</small></dd></div>
+      <div class="spec"><dt>بلا احتكاك</dt><dd>ISO 607<small>فلاتلوك — الظهر والليقنز بالكامل</small></dd></div>
+      <div class="spec"><dt>الجسر</dt><dd>Reinforced Gusset<small>جسر مقوّى بين الساقين — يجب تسعيره صراحةً</small></dd></div>
+      <div class="spec"><dt>البطانة</dt><dd>Breathable Mesh<small>شبك في ظهر البرا — في التدريب والتنس معاً</small></dd></div>
+      <div class="spec"><dt>الحزام</dt><dd>4 cm Jacquard Elastic<small>بشعار منسوج — للّيقنز والبرا</small></dd></div>
+      <div class="spec"><dt>الشعار</dt><dd>Reflective TPU · 3.5 cm<small>كبس حراري 150°م / 12–15 ثانية</small></dd></div>
+      <div class="spec"><dt>الحشوات</dt><dd>Removable Molded Cups<small>تُدخل عبر جيب داخلي</small></dd></div>
+      <div class="spec"><dt>الإبرة</dt><dd>Ballpoint</dd></div>
+      <div class="spec"><dt>التشطيبات</dt><dd>Anti-Odor · UV<small>ومقاومة بهتان، وثبات شكل</small></dd></div>
+      <div class="spec"><dt>السطح</dt><dd>Matte · Anti-Pilling<small>مضاد للّمعان، ملمس ناعم</small></dd></div>
+      <div class="spec"><dt>المقاسات</dt><dd>XS S M L XL<small>32-34 · 34-36 · 36-38 · 38-40 · 40-42</small></dd></div>
+      <div class="spec"><dt>الشهادات</dt><dd>OEKO-TEX 100<br>REACH · SGS · ISO 9001</dd></div>
+      <div class="spec"><dt>بلا</dt><dd>No Zippers · No Buttons<small>ولا بطانة — المطاط هو البنية</small></dd></div>
+    </dl>
+
+    <h3>ثلاث نقاط تُنسى عادةً وتكلّف غالياً</h3>
+    <ul class="plain">
+      <li><strong>الجسر المقوّى.</strong> مذكور في مخطّط البناء المفكّك في صفحة 15، ونادراً ما ينتبه له المصنع في التسعير الأول. اطلب تسعيره صراحةً — إضافته لاحقاً تعني باتروناً جديداً.</li>
+      <li><strong>الشبك في ظهر البرا.</strong> خياطة الشبك مع الجيرسي في قطعة واحدة دون تموّج مهارة مستقلة. اطلب رؤيتها في العيّنة الأولى.</li>
+      <li><strong>تشطيبا مقاومة الرائحة والأشعة.</strong> هذان علاجان كيميائيان يُضافان للقماش، ولكلٍّ منهما كلفة وحدّ أدنى منفصل. وإن أردت ادّعاء حماية من الأشعة على البطاقة، فأنت تحتاج تقرير اختبار <span class="mono">UPF</span> برقم.</li>
+    </ul>
+
+    <figure>
+      <img src="assets/specs.jpg" alt="صفحة المواصفات من عرض FLOW: مخطط البناء المفكّك، طبقات القماش، أكواد الخياطة، الأبعاد والشهادات.">
+      <figcaption>ص 15 — أكثر صفحة كثافة بالمعلومات الفنية. أرسلها مع صفحة 17.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <p class="eyebrow">القطعة الثانية</p>
+    <h2>مجموعة التنس</h2>
+    <p>برا بظهر شبكي وسكورت بشورت داخلي مدمج. نفس القماش ونفس نوع المصنع، لكنها تضيف قدرتين اسأل عنهما تحديداً:</p>
+    <ul class="plain">
+      <li><strong>تركيب ثلاث طبقات</strong> — قماش أدائي خارجي، شبك تهوية، وطبقة داخلية ناعمة على الجلد.</li>
+      <li><strong>سكورت بشورت داخلي</strong> — قطعتان بحزام واحد. البناء أعقد من ليقنز، ويحتاج باتروناً منفصلاً.</li>
+    </ul>
+    <p>لاحظ أن مجموعة التنس <strong>ليس لها رسومات مسطّحة ولا أكواد خياطة</strong> في العرض — فهي أقل جاهزية من طقم التدريب. ابدأ بالطقم الأول، واذكر التنس في طلب التسعير فقط: المصنع الذي لا يستطيع عملها يستبعد نفسه مبكّراً ويوفّر وقتك.</p>
+
+    <figure>
+      <img src="assets/tennis.jpg" alt="صفحة مجموعة التنس: البرا بالظهر الشبكي والسكورت بالشورت الداخلي مع شرح طبقات القماش الثلاث.">
+      <figcaption>ص 22 — لونية «ليموني إلى سماوي». وص 20 تعرض اللونية البيضاء.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <p class="eyebrow">مرشّحون</p>
+    <h2>المصانع</h2>
+
+    <div class="caution">
+      <p class="tag">اقرأ هذا قبل الجدول</p>
+      <p>شبكتي هنا منعتني من فتح مواقع هذه المصانع، فلم أتحقق من أيٍّ من الأرقام أدناه بنفسي. وأغلب صفحات «أفضل ١٠ مصانع» على الإنترنت محتوى تسويقي يكتبه وكلاء توريد يربحون من إحالتك.</p>
+      <p><strong>تعامل مع الجدول كقائمة أسماء للتحقق، لا كتوصية.</strong> خطوات التحقق في آخر الصفحة.</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>المصنع</th><th>الحد الأدنى المُعلَن</th><th>لماذا هو مرشّح لـ FLOW</th></tr>
+        </thead>
+        <tbody>
+          <tr class="region-row"><td colspan="3">البرتغال — جودة أوروبية، كميات صغيرة</td></tr>
+          <tr><td class="name">E3plus</td><td class="moq">100 / موديل</td><td>رياضي تقني، وعنده <strong>طباعة تصعيدية</strong> صراحةً. الأقرب لمواصفاتك في أوروبا.</td></tr>
+          <tr><td class="name">White Cotton</td><td class="moq">50 / موديل</td><td>باركيلوس. أقل حدّ أدنى وجدته في أوروبا، وأقمشة OEKO-TEX.</td></tr>
+          <tr><td class="name">Athleisure Basics</td><td class="moq">70 / موديل</td><td>أثليجر لعلامات أوروبية. «صُنع في البرتغال» يرفع قيمة العلامة.</td></tr>
+
+          <tr class="region-row"><td colspan="3">تركيا — الأقرب شحناً للرياض</td></tr>
+          <tr><td class="name">Conbello</td><td class="moq">مرن</td><td>متخصص تحديداً في الليقنز والبرا — أي في منتجك نفسه.</td></tr>
+          <tr><td class="name">Last Textile</td><td class="moq">100 / موديل</td><td>إستنبول. شحن قصير للخليج وتسليم أسرع من آسيا.</td></tr>
+          <tr><td class="name">AEM Textile</td><td class="moq">—</td><td>15+ سنة في الملابس الرياضية لعلامات أوروبية وبريطانية.</td></tr>
+
+          <tr class="region-row"><td colspan="3">باكستان والصين — الأقلّ كلفة عند التوسّع</td></tr>
+          <tr><td class="name">Linushi</td><td class="moq">30 / موديل</td><td>يذكر أطقم برا+ليقنز <strong>من صبغة واحدة</strong> — مهم لتطابق التدرّج بين القطعتين.</td></tr>
+          <tr><td class="name">Zega Apparel</td><td class="moq">~50 / تصميم</td><td>كراتشي. قصّ وخياطة + طباعة تصعيدية بحدّ أدنى منخفض.</td></tr>
+          <tr><td class="name">YOUMEGA</td><td class="moq">300–500 / لون</td><td>حدّ أدنى أعلى، لكن يدعم توثيق OEKO-TEX 100.</td></tr>
+
+          <tr class="region-row"><td colspan="3">الصف الأول — للتوسّع لاحقاً، لا للبداية</td></tr>
+          <tr><td class="name">Eclat Textile</td><td class="moq">مرتفع جداً</td><td>تايوان وفيتنام. يورّد Nike وLululemon وUnder Armour. <strong>ينسج أقمشته بنفسه</strong> — تكامل رأسي يعني تحكّماً كاملاً باللون. لن يقبلك بكمية صغيرة، لكن اعرف أن هذا هو السقف.</td></tr>
+          <tr><td class="name">Makalot</td><td class="moq">مرتفع جداً</td><td>رياضي أدائي لـ Nike وUA وLululemon.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">ملاحظة على الأرقام: الحدّ الأدنى المُعلَن للّيقنز العادي لا ينطبق على الطباعة الكاملة. القاعدة الشائعة في الطباعة التصعيدية هي <span class="mono">200 قطعة لكل تصميم طباعة</span>، لأن الطباعة تتم على الأقمشة قبل القصّ. اسأل عن الحدّ الأدنى <em>للطباعة</em> لا للخياطة — وعندك أربع لونيات، أي أربعة تصاميم طباعة.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">الفخّ</p>
+    <h2>التريمات قد تحكم طلبك، لا الملابس</h2>
+
+    <p>حزام الجاكار المخصّص بعرض <span class="mono">4 سم</span> يُصنع عند مورّد تريمات منفصل، وحدّه الأدنى يُقاس بالأمتار: من <span class="mono">100</span> إلى <span class="mono">1000 متر للّون الواحد</span>، بسعر <span class="mono">0.30–0.50 دولار/متر</span>.</p>
+
+    <p>احسبها: الطقم الواحد (حزام ليقنز + حزام برا) يستهلك نحو <span class="mono">1.5 متر</span>. فلو كان حدّ المورّد <span class="mono">500 متر</span>، فأنت ملزَم بشراء ما يكفي لـ <strong>~330 طقماً</strong> — حتى لو وافق المصنع على خياطة 50 فقط.</p>
+
+    <p><strong>هذا هو الرقم الذي يحدّد حجم طلبتك الأولى، لا الحدّ الأدنى للمصنع.</strong> اسأل عنه في أول رسالة. ولك مخرجان إن كان كبيراً: أن يورّده المصنع من مخزونه بشعارك ضمن دفعة مشتركة، أو أن تبدأ بحزام سادة وتؤجّل الجاكار للطلبية الثانية.</p>
+
+    <p>نفس المنطق ينطبق على شعار الـTPU العاكس والليبل المنسوج وتشطيبَي مقاومة الرائحة والأشعة — كلٌّ منها من مورّد مستقل بحدّ أدنى مستقل.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">جاهزة للإرسال</p>
+    <h2>رسالة طلب التسعير</h2>
+    <p>بالإنجليزية، وفيها كل مواصفة في التك-باك. أرسلها كما هي لكل مصنع في القائمة وقارن الردود. الأسئلة العشرة في آخرها هي التي تكشف المصنع الجادّ من الوسيط.</p>
+
+    <div class="rfq-head">
+      <span>RFQ · FLOW Activewear</span>
+      <button class="copy" id="copyBtn" type="button">نسخ النص</button>
+    </div>
+<pre class="rfq" id="rfqText">Subject: RFQ - Women's Sports Bra + Legging Set, All-Over Sublimation, 88/12 Poly-Spandex
+
+Hello,
+
+We are FLOW, a women's activewear brand preparing our first production run.
+We are looking for a cut-and-sew manufacturer with IN-HOUSE all-over
+sublimation printing. A full tech pack with flats, callouts and construction
+diagrams is available on request.
+
+PRODUCT
+  Style 1  Women's sports bra - racerback, breathable mesh back panel,
+           removable molded cups
+  Style 2  Women's high-rise leggings - full length, reinforced gusset
+  Style 3  (phase 2) Tennis skort with built-in inner shorts,
+           plus mesh-back bra
+
+FABRIC
+  Composition   88% polyester / 12% spandex
+  Weight        220-260 GSM
+  Structure     Circular performance knit, 4-way stretch
+  Layers        Outer sublimation print / performance knit /
+                4-way stretch core / skin comfort layer
+  Finishes      Matte, anti-gloss, anti-pilling, moisture-wicking,
+                quick-dry, ANTI-ODOR, UV PROTECTION, shape retention
+
+PRINT
+  All-over sublimation, printed on panels BEFORE cutting and sewing.
+  Continuous gradient across panels - print alignment across seams
+  is required.
+  Colourways    4 in total (lime/cyan, pink/purple, royal blue,
+                white with lime + cyan lines)
+  Tolerance     Delta-E <= 2.0
+  NOTE: we will supply Pantone TCX references and a dyed fabric swatch
+  for each colourway. Please confirm you match to TCX, not to screen values.
+
+CONSTRUCTION
+  4-thread overlock (ISO 514)  principal seams, elastic underband
+  Coverstitch      (ISO 406)   neckline, armhole binding, underband topstitch
+  Flatlock         (ISO 607)   racerback and throughout leggings, chafe-free
+  High-waist compression band. Reinforced gusset. Ergonomic pattern cutting.
+  Ballpoint needle. No zippers, no buttons, no interfacing.
+
+DIMENSIONS
+  Inseam 68 cm. High rise. Medium compression. Athletic fit.
+
+TRIMS
+  4 cm custom jacquard elastic waistband + bra underband (logo woven in)
+  Reflective black TPU heat-transfer logo, 35 mm wide,
+    applied at 150 C / 12-15 s / medium pressure
+  Woven main neck label; sublimated satin care label
+  Removable molded foam cups, inserted via internal pocket
+  Colour-matched high-stretch polyester thread
+
+SIZES
+  XS (32-34)  S (34-36)  M (36-38)  L (38-40)  XL (40-42)
+
+CERTIFICATIONS REQUIRED
+  OEKO-TEX Standard 100, REACH compliant, AZO-free dyes.
+  ISO 9001:2015 for the facility. Please send certificate numbers, not logos.
+  If you claim UV protection, we need a UPF test report with a rating.
+
+PACKAGING
+  Recyclable polybag, paper hang tag, thank-you card, export carton.
+
+PLEASE QUOTE
+   1. MOQ per style, per colourway, and the size ratio you require
+   2. MOQ per PRINT DESIGN (not per style) - we have 4 colourways
+   3. FOB price per piece at 100 / 300 / 1000 pcs per style
+   4. Sampling cost and lead time (proto, fit, PP sample)
+   5. Bulk lead time after PP approval
+   6. Is sublimation printing in-house or subcontracted?
+   7. Your lab dip / strike-off process, and how you hold Delta-E <= 2.0
+   8. Price impact of the reinforced gusset and the mesh back panel
+   9. Can you supply the 4 cm jacquard elastic, and at what MOQ in metres?
+  10. Anti-odor and UV finishes: cost, minimum, and which treatment you use
+  11. Shipping terms and transit time to Riyadh, Saudi Arabia
+
+Thank you,
+[your name] - FLOW
+</pre>
+    <p class="note">غيّر <span class="mono">[your name]</span> فقط. لا تحذف السؤال السادس ولا التاسع — هما الأهمّ.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">قبل أن تدفع</p>
+    <h2>كيف تتحقق من المصنع</h2>
+
+    <ol class="steps">
+      <li><b>اطلب رقم الشهادة، لا صورتها</b><p>أيّ أحد يضع شعار OEKO-TEX على ملف PDF. الرقم وحده يُفحص، على <a href="https://www.oeko-tex.com/en/label-check" target="_blank" rel="noopener">oeko-tex.com/label-check</a>. ولو ادّعوا GRS أو GOTS، افحصهم في <a href="https://textileexchange.org/find-certified-company/" target="_blank" rel="noopener">سجل Textile Exchange</a>.</p></li>
+      <li><b>اسأل: الطباعة داخلية أم عند مقاول؟</b><p>هذا السؤال وحده يصفّي نصف القائمة. الطباعة الخارجية تعني هامشين إضافيين، وفقدان التحكّم بمحاذاة التدرّج ودقّة اللون.</p></li>
+      <li><b>اطلب strike-off قبل أي شيء</b><p>قطعة قماش مطبوعة بتدرّجك قبل خياطة أي شيء. أرخص اختبار ممكن، ويكشف فوراً إن كانوا يصلون إلى <span class="mono">ΔE ≤ 2.0</span>.</p></li>
+      <li><b>ثم عيّنة أوّلية واحدة</b><p>لا تطلب إنتاجاً قبل أن تمسك بيدك برا وليقنز مخيطَين. افحص محاذاة التدرّج عند الدرزات تحديداً — هنا يفشل المصنع الضعيف.</p></li>
+      <li><b>اختبر الاحتكاك والانحناء</b><p>الفلاتلوك موجود ليمنع الاحتكاك، والليقنز يجب ألّا يصبح شفّافاً عند القرفصاء. اختبر الاثنين على العيّنة قبل الاعتماد.</p></li>
+      <li><b>ابحث عن المصنع في قوائم العلامات</b><p>لولوليمون تنشر <a href="https://corporate.lululemon.com/~/media/Files/L/Lululemon/our-impact/people-who-make-our-products/lululemonSupplierListFinal060822.pdf" target="_blank" rel="noopener">قائمة مصانعها بالأسماء والعناوين</a>. مصنع مذكور في قائمة علامة كبيرة = دليل مستقل، لا إعلان.</p></li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>أُعدّ هذا الملف من قراءة <span class="mono">FLOW.pdf</span> صفحةً صفحة — 31 صفحة، 28 منها فيها محتوى، وكلّها صور بلا طبقة نص. المواصفات منقولة من صفحات 4 و15 و16 و17 و22. أسماء المصانع وأرقام الحدّ الأدنى من نتائج بحث على الإنترنت ولم يجرِ التحقق منها مباشرةً — راجع خطوات التحقق أعلاه قبل الالتزام بأي مورّد.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var btn = document.getElementById('copyBtn');
+    var pre = document.getElementById('rfqText');
+    if(!btn || !pre) return;
+
+    function flash(msg){
+      btn.textContent = msg;
+      btn.setAttribute('data-done','1');
+      setTimeout(function(){
+        btn.textContent = 'نسخ النص';
+        btn.removeAttribute('data-done');
+      }, 2000);
+    }
+
+    function selectText(){
+      try{
+        var range = document.createRange();
+        range.selectNodeContents(pre);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return true;
+      }catch(e){ return false; }
+    }
+
+    btn.addEventListener('click', function(){
+      var text = pre.textContent;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          flash('تم النسخ');
+        }).catch(function(){
+          if(selectText()) flash('محدّد — انسخه'); else flash('تعذّر النسخ');
+        });
+      } else {
+        if(selectText()) flash('محدّد — انسخه'); else flash('تعذّر النسخ');
+      }
+    });
+  })();
+</script>
