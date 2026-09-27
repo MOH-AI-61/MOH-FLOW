@@ -1,286 +1,335 @@
 <title>FLOW Product System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Outfit:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Outfit:wght@200;300;400&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
   :root{
     color-scheme: dark;
-    --void:#05080A;
-    --deep:#080D10;
-    --panel:#0C1317;
-    --panel-2:#101A1F;
-    --line:#1A272C;
-    --line-hi:#26383E;
-    --ink:#E9F2F3;
-    --ink-2:#8FA3A8;
-    --ink-3:#5E7176;
+    --void:#030608;
+    --deep:#060B0E;
+    --glass:rgba(7,15,19,.66);
+    --line:rgba(0,212,230,.18);
+    --line-2:rgba(0,212,230,.34);
+    --ink:#DEEAEC;
+    --ink-2:#8DA2A7;
+    --ink-3:#556A6F;
     --cyan:#00D4E6;
     --lime:#CDF000;
     --pink:#FF2D9A;
     --violet:#7A2CFF;
-    --grad: linear-gradient(105deg, var(--lime), var(--cyan));
+    --grad:linear-gradient(105deg,var(--lime),var(--cyan));
 
-    --display:"Chakra Petch", system-ui, sans-serif;
-    --body:"Outfit", system-ui, -apple-system, sans-serif;
-    --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+    --display:"Chakra Petch",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --body:"Outfit",system-ui,-apple-system,sans-serif;
   }
-
   *{box-sizing:border-box}
 
   body{
-    margin:0;
-    background:var(--void);
-    color:var(--ink);
-    font-family:var(--body);
-    font-weight:300;
-    font-size:16px;
-    line-height:1.7;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+    margin:0;background:var(--void);color:var(--ink);
+    font-family:var(--body);font-weight:300;font-size:16px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
   }
+  a{color:var(--cyan)}
+  :focus-visible{outline:1px solid var(--cyan);outline-offset:3px}
 
-  a{color:var(--cyan);text-underline-offset:3px}
-  :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px}
+  /* ══ fixed atmosphere ══ */
+  #field{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.66}
+  .scan{
+    position:fixed;inset:0;z-index:40;pointer-events:none;
+    background:repeating-linear-gradient(to bottom,rgba(0,212,230,.030) 0 1px,transparent 1px 3px);
+  }
+  .vig{
+    position:fixed;inset:0;z-index:39;pointer-events:none;
+    background:radial-gradient(125% 82% at 50% 38%,transparent 38%,rgba(2,5,7,.82) 100%);
+  }
+  main,nav,header,footer{position:relative;z-index:2}
 
-  /* ---------- nav ---------- */
+  /* ══ HUD corner brackets ══ */
+  .hud{position:relative}
+  .hud::before,.hud::after,
+  .hud > .cnr::before,.hud > .cnr::after{
+    content:"";position:absolute;width:13px;height:13px;
+    border:1px solid var(--line-2);pointer-events:none;z-index:3;
+  }
+  .hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+  .hud > .cnr::before{top:-1px;right:-1px;border-left:0;border-bottom:0}
+  .hud > .cnr::after{bottom:-1px;left:-1px;border-right:0;border-top:0}
+
+  /* ══ nav ══ */
   nav{
-    position:sticky;
-    top:env(safe-area-inset-top, 0px);
-    z-index:50;
-    background:rgba(5,8,10,.86);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+    background:rgba(3,6,8,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
     border-bottom:1px solid var(--line);
   }
-  .nav-in{
-    max-width:1180px;margin:0 auto;
-    padding:11px 20px;
-    display:flex;align-items:center;gap:20px;
-    flex-wrap:wrap;
-  }
+  .nav-in{max-width:1220px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .mark{
-    font-family:var(--display);font-weight:700;font-size:19px;
-    letter-spacing:.06em;font-style:italic;
-    background:var(--grad);-webkit-background-clip:text;background-clip:text;
-    color:transparent;flex:none;
+    font-family:var(--display);font-weight:700;font-size:19px;font-style:italic;
+    letter-spacing:.05em;background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;color:transparent;flex:none;
   }
-  .nav-links{display:flex;gap:4px;flex-wrap:wrap;margin-inline-start:auto}
+  .readout{
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-3);
+    display:flex;gap:14px;flex-wrap:wrap;
+  }
+  .readout b{color:var(--cyan);font-weight:500}
+  .dot{
+    display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--lime);
+    margin-inline-end:6px;vertical-align:middle;animation:blip 2.2s ease-in-out infinite;
+  }
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  .nav-links{display:flex;gap:2px;flex-wrap:wrap;margin-inline-start:auto}
   .nav-links a{
-    font-family:var(--mono);font-size:11px;letter-spacing:.09em;
-    text-transform:uppercase;color:var(--ink-3);
-    text-decoration:none;padding:6px 10px;border-radius:3px;
-    transition:color .18s ease, background .18s ease;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-3);text-decoration:none;padding:6px 10px;
+    border:1px solid transparent;transition:.16s;
   }
-  .nav-links a:hover{color:var(--ink);background:var(--panel-2)}
+  .nav-links a:hover{color:var(--cyan);border-color:var(--line)}
 
-  /* ---------- shell ---------- */
-  .wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+  .wrap{max-width:1220px;margin:0 auto;padding-inline:20px}
 
-  /* ---------- hero ---------- */
+  /* ══ hero ══ */
   header.hero{
-    position:relative;overflow:hidden;
-    border-bottom:1px solid var(--line);
-    padding-block:76px 64px;
+    position:relative;overflow:hidden;min-height:clamp(560px,86vh,780px);
+    display:flex;align-items:center;border-bottom:1px solid var(--line);
   }
-  .glow{
-    position:absolute;inset:-40% -20% auto -20%;height:130%;
-    background:
-      radial-gradient(48% 42% at 22% 30%, rgba(205,240,0,.14), transparent 70%),
-      radial-gradient(46% 40% at 76% 62%, rgba(0,212,230,.16), transparent 70%);
-    pointer-events:none;
+  .hero-bg{
+    position:absolute;inset:0;
+    background:url(img/bg-city.jpg) center/cover no-repeat;
+    filter:saturate(1.15) contrast(1.05);
   }
-  .hero-in{position:relative}
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg,rgba(3,6,8,.95) 0%,rgba(3,6,8,.72) 46%,rgba(3,6,8,.34) 100%);
+  }
+  .hero-in{position:relative;width:100%;padding-block:64px}
+
   .eyebrow{
-    font-family:var(--mono);font-size:11px;letter-spacing:.24em;
-    text-transform:uppercase;color:var(--cyan);margin:0 0 20px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--cyan);margin:0 0 18px;
   }
   h1{
-    font-family:var(--display);font-weight:700;
-    font-size:clamp(2.7rem, 8vw, 5.4rem);
-    line-height:.94;letter-spacing:-.02em;
-    margin:0 0 22px;text-wrap:balance;text-transform:uppercase;
+    font-family:var(--display);font-weight:700;text-transform:uppercase;
+    font-size:clamp(2.8rem,8.6vw,5.9rem);line-height:.92;letter-spacing:-.022em;
+    margin:0 0 20px;text-wrap:balance;
   }
-  h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lede{
-    font-size:clamp(1.02rem,2.3vw,1.24rem);
-    color:var(--ink-2);max-width:56ch;margin:0 0 34px;line-height:1.62;
+  .glitch{position:relative;display:inline-block;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .glitch::before,.glitch::after{
+    content:attr(data-t);position:absolute;inset:0;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    clip-path:inset(0 0 60% 0);
   }
-  .stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
-  .stat{flex:1 1 150px;padding:15px 18px;background:var(--panel);border-inline-end:1px solid var(--line)}
-  .stat:last-child{border-inline-end:0}
-  .stat b{
-    display:block;font-family:var(--display);font-weight:600;font-size:1.5rem;
-    line-height:1.15;color:var(--ink);letter-spacing:.01em;
+  .glitch::before{background:linear-gradient(105deg,#FF2D9A,#7A2CFF);animation:gl1 4.6s steps(1) infinite}
+  .glitch::after{background:linear-gradient(105deg,#00D4E6,#CDF000);animation:gl2 4.6s steps(1) infinite}
+  @keyframes gl1{
+    0%,88%,100%{transform:none;opacity:0}
+    89%{transform:translate(-3px,1px);opacity:.85;clip-path:inset(12% 0 58% 0)}
+    92%{transform:translate(2px,-2px);opacity:.7;clip-path:inset(62% 0 14% 0)}
+    95%{transform:none;opacity:0}
   }
-  .stat span{
-    font-family:var(--mono);font-size:10px;letter-spacing:.13em;
-    text-transform:uppercase;color:var(--ink-3);
+  @keyframes gl2{
+    0%,90%,100%{transform:none;opacity:0}
+    91%{transform:translate(3px,-1px);opacity:.8;clip-path:inset(40% 0 34% 0)}
+    94%{transform:translate(-2px,2px);opacity:.6;clip-path:inset(8% 0 72% 0)}
+    97%{transform:none;opacity:0}
+  }
+  .lede{font-size:clamp(1rem,2.2vw,1.2rem);color:var(--ink-2);max-width:52ch;margin:0 0 32px;line-height:1.6}
+
+  .stats{display:flex;flex-wrap:wrap;gap:10px}
+  .stat{
+    flex:1 1 138px;padding:13px 16px;background:var(--glass);
+    border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .stat b{display:block;font-family:var(--display);font-weight:600;font-size:1.44rem;line-height:1.2}
+  .stat span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+
+  /* ══ cinematic band ══ */
+  .cine{
+    position:relative;height:clamp(230px,34vw,360px);overflow:hidden;
+    border-block:1px solid var(--line);display:flex;align-items:flex-end;
+  }
+  .cine .ph{position:absolute;inset:0;background-position:center;background-size:cover;filter:saturate(1.12)}
+  .cine::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(3,6,8,.97) 4%,rgba(3,6,8,.30) 62%,rgba(3,6,8,.55) 100%);
+  }
+  .cine-txt{position:relative;z-index:2;padding:0 20px 20px;max-width:1220px;margin:0 auto;width:100%}
+  .cine-txt p{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cyan);margin:0;
+  }
+  .cine-txt h4{
+    font-family:var(--display);font-weight:600;text-transform:uppercase;
+    font-size:clamp(1.3rem,3.6vw,2.2rem);margin:4px 0 0;line-height:1.05;letter-spacing:-.01em;
   }
 
-  /* ---------- sections ---------- */
-  section.model{padding-block:72px;border-bottom:1px solid var(--line)}
-  .tag{
-    display:inline-block;font-family:var(--mono);font-size:10px;
-    letter-spacing:.17em;text-transform:uppercase;
-    color:var(--void);background:var(--grad);
-    padding:4px 11px;border-radius:99px;margin-bottom:16px;font-weight:500;
+  /* ══ sections ══ */
+  section.model{padding-block:64px}
+  .idline{
+    display:flex;align-items:center;gap:12px;margin-bottom:16px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);
   }
-  .tag.alt{background:linear-gradient(105deg,var(--pink),var(--violet));color:#fff}
+  .idline .no{color:var(--void);background:var(--grad);padding:3px 9px;font-weight:700}
+  .idline .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line-2),transparent)}
   h2{
-    font-family:var(--display);font-weight:600;
-    font-size:clamp(1.9rem,4.6vw,3rem);
-    line-height:1.04;letter-spacing:-.015em;
-    margin:0 0 14px;text-transform:uppercase;
+    font-family:var(--display);font-weight:600;text-transform:uppercase;
+    font-size:clamp(1.9rem,4.8vw,3.1rem);line-height:1.02;letter-spacing:-.018em;margin:0 0 14px;
   }
-  .sub{color:var(--ink-2);max-width:62ch;margin:0 0 34px;font-size:1.03rem}
+  .sub{color:var(--ink-2);max-width:62ch;margin:0 0 32px;font-size:1.02rem}
   h3{
-    font-family:var(--display);font-weight:600;font-size:1.06rem;
-    letter-spacing:.04em;text-transform:uppercase;
-    margin:0 0 14px;color:var(--ink);
+    font-family:var(--display);font-weight:600;font-size:1rem;letter-spacing:.07em;
+    text-transform:uppercase;margin:0 0 14px;color:var(--cyan);
   }
+  .split{display:grid;grid-template-columns:1.08fr .92fr;gap:34px;align-items:start}
+  @media (max-width:880px){.split{grid-template-columns:1fr;gap:28px}}
 
-  .split{display:grid;grid-template-columns:1.05fr .95fr;gap:38px;align-items:start}
-  @media (max-width:860px){ .split{grid-template-columns:1fr;gap:30px} }
-
-  /* ---------- viewer ---------- */
+  /* ══ product stage ══ */
   .stage{
-    position:relative;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:6px;
-    padding:22px;
+    position:relative;overflow:hidden;
+    background:var(--glass);border:1px solid var(--line);
+    padding:22px;min-height:340px;
     display:flex;align-items:center;justify-content:center;
-    min-height:330px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   }
-  .stage.light{background:#F7F9F9;border-color:#E2E8E9}
-  .stage img{max-width:100%;max-height:430px;height:auto;display:block}
+  .stage.light{background:rgba(232,242,243,.94)}
+  .stage img{max-width:100%;max-height:410px;height:auto;display:block;position:relative;z-index:2}
   .stage .frame{display:none}
   .stage .frame.on{display:block}
+  .sweep{
+    position:absolute;left:0;right:0;height:34%;z-index:3;pointer-events:none;
+    background:linear-gradient(to bottom,transparent,rgba(0,212,230,.14),rgba(205,240,0,.10),transparent);
+    animation:sweep 5.2s linear infinite;
+  }
+  @keyframes sweep{0%{top:-40%}100%{top:106%}}
+  .grid-bg{
+    position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+    background-image:
+      linear-gradient(rgba(0,212,230,.08) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,212,230,.08) 1px,transparent 1px);
+    background-size:34px 34px;
+  }
+  .stage.light .grid-bg{opacity:.35;background-image:
+      linear-gradient(rgba(0,120,140,.10) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,120,140,.10) 1px,transparent 1px)}
 
-  .controls{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   button.chip{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--ink-2);
-    background:var(--panel-2);border:1px solid var(--line-hi);
-    padding:7px 13px;border-radius:3px;cursor:pointer;
-    transition:all .16s ease;
+    font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-2);background:rgba(8,18,22,.8);border:1px solid var(--line);
+    padding:7px 12px;cursor:pointer;transition:.15s;
   }
-  button.chip:hover{color:var(--ink);border-color:var(--ink-3)}
-  button.chip[aria-pressed="true"]{
-    background:var(--grad);color:var(--void);border-color:transparent;font-weight:500;
-  }
+  button.chip:hover{color:var(--cyan);border-color:var(--line-2)}
+  button.chip[aria-pressed="true"]{background:var(--grad);color:var(--void);border-color:transparent;font-weight:700}
   button.chip.pink[aria-pressed="true"]{background:linear-gradient(105deg,var(--pink),var(--violet));color:#fff}
+  .hint{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:10px 0 0}
 
-  .hint{
-    font-family:var(--mono);font-size:10px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--ink-3);margin:10px 0 0;
-  }
-
-  /* ---------- spec list ---------- */
+  /* ══ spec readout ══ */
   dl.spec{margin:0;border-top:1px solid var(--line)}
   dl.spec > div{
-    display:grid;grid-template-columns:auto 1fr;gap:16px;
-    padding:11px 2px;border-bottom:1px solid var(--line);align-items:baseline;
+    display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;
+    padding:10px 10px;border-bottom:1px solid var(--line);
+    transition:background .16s;
   }
-  dl.spec dt{
-    font-family:var(--mono);font-size:10px;letter-spacing:.11em;
-    text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
-  }
-  dl.spec dd{
-    margin:0;text-align:end;font-family:var(--mono);font-size:.855rem;
-    color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.5;
-  }
-  dl.spec dd em{font-style:normal;color:var(--ink-3);font-size:.78rem;display:block}
+  dl.spec > div:hover{background:rgba(0,212,230,.045)}
+  dl.spec dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  dl.spec dd{margin:0;text-align:end;font-family:var(--mono);font-size:.84rem;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.45}
+  dl.spec dd em{font-style:normal;color:var(--ink-3);font-size:.76rem;display:block}
 
   ul.feat{list-style:none;margin:0;padding:0}
-  ul.feat li{
-    position:relative;padding-inline-start:20px;margin-bottom:11px;
-    color:var(--ink-2);font-size:.96rem;line-height:1.6;
-  }
+  ul.feat li{position:relative;padding-inline-start:22px;margin-bottom:11px;color:var(--ink-2);font-size:.95rem;line-height:1.58}
   ul.feat li::before{
-    content:"";position:absolute;inset-inline-start:0;top:.62em;
-    width:7px;height:7px;border-radius:2px;background:var(--grad);
+    content:"";position:absolute;inset-inline-start:0;top:.55em;
+    width:8px;height:8px;border:1px solid var(--cyan);transform:rotate(45deg);
   }
-  ul.feat b{color:var(--ink);font-weight:500}
+  ul.feat b{color:var(--ink);font-weight:400}
 
-  /* ---------- 3D fabric stack ---------- */
-  .stack-wrap{perspective:1100px;padding:34px 0 18px;display:flex;justify-content:center}
+  /* ══ holographic fabric stack ══ */
+  .stack-wrap{perspective:1200px;padding:38px 0 14px;display:flex;justify-content:center}
   .stack{
-    position:relative;width:min(300px,78vw);height:200px;
-    transform-style:preserve-3d;
-    transform:rotateX(56deg) rotateZ(-34deg);
-    transition:transform .6s cubic-bezier(.2,.7,.3,1);
+    position:relative;width:min(300px,76vw);height:196px;transform-style:preserve-3d;
+    transform:rotateX(58deg) rotateZ(-36deg);
+    animation:drift 16s ease-in-out infinite;
   }
-  .stack-wrap:hover .stack{transform:rotateX(46deg) rotateZ(-22deg)}
+  @keyframes drift{
+    0%,100%{transform:rotateX(58deg) rotateZ(-36deg)}
+    50%{transform:rotateX(50deg) rotateZ(-24deg)}
+  }
+  .stack-wrap:hover .stack{animation-play-state:paused}
   .layer{
-    position:absolute;inset:0;border-radius:8px;
-    border:1px solid rgba(255,255,255,.18);
-    transform-style:preserve-3d;
-    transition:transform .6s cubic-bezier(.2,.7,.3,1);
-    display:flex;align-items:flex-end;padding:10px 13px;
+    position:absolute;inset:0;border:1px solid rgba(0,212,230,.55);
+    transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.75,.3,1);
+    display:flex;align-items:flex-end;padding:9px 12px;
+    box-shadow:0 0 22px rgba(0,212,230,.14) inset;
   }
-  .layer span{
-    font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;
-    text-transform:uppercase;color:rgba(0,0,0,.72);font-weight:500;
-  }
-  .layer.dark span{color:rgba(255,255,255,.82)}
-  .l1{background:linear-gradient(115deg,#CDF000,#00D4E6);transform:translateZ(96px)}
-  .l2{background:linear-gradient(115deg,#8FB80A,#0FA3B2);transform:translateZ(64px)}
-  .l3{background:linear-gradient(115deg,#3D5A18,#116C77);transform:translateZ(32px)}
-  .l4{background:#E8EEEF;transform:translateZ(0)}
-  .stack-wrap:hover .l1{transform:translateZ(150px)}
-  .stack-wrap:hover .l2{transform:translateZ(100px)}
-  .stack-wrap:hover .l3{transform:translateZ(50px)}
+  .layer span{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+  .l1{background:linear-gradient(115deg,rgba(205,240,0,.82),rgba(0,212,230,.78));transform:translateZ(92px)}
+  .l1 span{color:rgba(0,0,0,.76)}
+  .l2{background:linear-gradient(115deg,rgba(143,184,10,.55),rgba(15,163,178,.55));transform:translateZ(61px)}
+  .l2 span{color:rgba(255,255,255,.9)}
+  .l3{background:linear-gradient(115deg,rgba(61,90,24,.5),rgba(17,108,119,.5));transform:translateZ(30px)}
+  .l3 span{color:rgba(255,255,255,.85)}
+  .l4{background:rgba(222,234,236,.28);transform:translateZ(0)}
+  .l4 span{color:rgba(255,255,255,.92)}
+  .stack-wrap:hover .l1{transform:translateZ(148px)}
+  .stack-wrap:hover .l2{transform:translateZ(98px)}
+  .stack-wrap:hover .l3{transform:translateZ(48px)}
 
-  /* ---------- three.js ---------- */
-  #bottle3d{
-    width:100%;height:440px;display:block;
-    cursor:grab;touch-action:none;border-radius:6px;
-  }
+  /* ══ three.js ══ */
+  #bottle3d{width:100%;height:440px;display:block;cursor:grab;touch-action:none}
   #bottle3d:active{cursor:grabbing}
-  .three-fallback{
-    display:flex;align-items:center;justify-content:center;
-    height:440px;color:var(--ink-3);font-family:var(--mono);font-size:12px;
-    text-align:center;padding:20px;
+  .fallback{
+    display:flex;align-items:center;justify-content:center;height:440px;
+    color:var(--ink-3);font-family:var(--mono);font-size:11px;text-align:center;padding:24px;
   }
 
-  /* ---------- shoe spinner ---------- */
+  /* ══ shoe spinner ══ */
   .spin{
-    position:relative;background:#000;border:1px solid var(--line);
-    border-radius:6px;overflow:hidden;cursor:ew-resize;
-    touch-action:pan-y;user-select:none;-webkit-user-select:none;
-    display:flex;align-items:center;justify-content:center;min-height:300px;
+    position:relative;background:#000;border:1px solid var(--line);overflow:hidden;
+    cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;
+    display:flex;align-items:center;justify-content:center;min-height:310px;
   }
-  .spin img{max-width:100%;max-height:390px;display:none;pointer-events:none}
+  .spin img{max-width:100%;max-height:380px;display:none;pointer-events:none;position:relative;z-index:2}
   .spin img.on{display:block}
   .spin .deg{
-    position:absolute;bottom:10px;inset-inline-start:12px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.12em;
-    color:var(--ink-3);text-transform:uppercase;
+    position:absolute;bottom:9px;inset-inline-start:11px;z-index:4;
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase;
+  }
+  .spin .tick{
+    position:absolute;bottom:9px;inset-inline-end:11px;z-index:4;
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-3);
   }
 
-  .band{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+  .band{display:block;width:100%;height:auto;border:1px solid var(--line)}
+  .note{font-family:var(--mono);font-size:10px;line-height:1.75;color:var(--ink-3);letter-spacing:.03em;margin:14px 0 0}
 
-  .note{
-    font-family:var(--mono);font-size:10.5px;line-height:1.7;
-    color:var(--ink-3);letter-spacing:.03em;margin:14px 0 0;
-  }
-
-  footer{padding-block:54px 70px;color:var(--ink-3);font-size:.88rem}
-  footer p{max-width:70ch;margin:0 0 10px}
+  footer{padding-block:52px 72px;color:var(--ink-3);font-size:.86rem;border-top:1px solid var(--line)}
+  footer p{max-width:72ch;margin:0 0 10px}
 
   @media (prefers-reduced-motion:reduce){
-    *{transition:none!important;animation:none!important}
+    *{animation:none!important;transition:none!important}
+    #field{display:none}
   }
 </style>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
 
 <nav>
   <div class="nav-in">
     <span class="mark">FLOW</span>
+    <div class="readout">
+      <span><i class="dot"></i>SYS ONLINE</span>
+      <span>KNIT <b>220–260 GSM</b></span>
+      <span>SEAM <b>ISO 607</b></span>
+      <span>ΔE <b>≤ 2.0</b></span>
+    </div>
     <div class="nav-links">
-      <a href="#training">Training Set</a>
+      <a href="#training">Training</a>
       <a href="#tennis">Tennis</a>
       <a href="#bottle">Bottle</a>
       <a href="#shoe">R1</a>
@@ -290,29 +339,35 @@
 </nav>
 
 <header class="hero">
-  <div class="glow"></div>
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="wrap hero-in">
-    <p class="eyebrow">Energy in Motion</p>
-    <h1>The <span class="g">FLOW</span><br>Product System</h1>
-    <p class="lede">Five products, one gradient. A women's training set and tennis kit built on 88/12 poly-spandex with all-over sublimation, plus the bottle, shoe and socks that complete the kit.</p>
+    <p class="eyebrow">// Energy in Motion</p>
+    <h1>The <span class="glitch" data-t="FLOW">FLOW</span><br>Product System</h1>
+    <p class="lede">Five products, one gradient. A women's training set and tennis kit engineered on 88/12 poly-spandex with all-over sublimation — plus the bottle, shoe and socks that close the loop.</p>
     <div class="stats">
-      <div class="stat"><b>5</b><span>Products</span></div>
-      <div class="stat"><b>4</b><span>Colourways</span></div>
-      <div class="stat"><b>220–260</b><span>GSM apparel</span></div>
-      <div class="stat"><b>XS–XL</b><span>Size range</span></div>
+      <div class="stat hud"><i class="cnr"></i><b>05</b><span>Products</span></div>
+      <div class="stat hud"><i class="cnr"></i><b>04</b><span>Colourways</span></div>
+      <div class="stat hud"><i class="cnr"></i><b>68 cm</b><span>Inseam</span></div>
+      <div class="stat hud"><i class="cnr"></i><b>XS–XL</b><span>Size range</span></div>
     </div>
   </div>
 </header>
 
-<!-- ══════════════ TRAINING SET ══════════════ -->
+<main>
+
+<!-- ═══ 01 TRAINING ═══ -->
+<div class="cine"><div class="ph" style="background-image:url(img/bg-street.jpg)"></div>
+  <div class="cine-txt"><p>// Module 01</p><h4>Outrun the future</h4></div></div>
+
 <section class="model wrap" id="training">
-  <span class="tag">01 · Apparel</span>
+  <div class="idline"><span class="no">01</span><span>Apparel · Training</span><span class="rule"></span><span>SKU FLW-TS</span></div>
   <h2>Women's Training Set</h2>
-  <p class="sub">Racerback sports bra with a breathable mesh back and removable moulded cups, paired with high-rise leggings cut on a reinforced gusset. The gradient is sublimated onto the fabric before a single panel is cut, so it runs unbroken across every seam.</p>
+  <p class="sub">Racerback sports bra with a breathable mesh back and removable moulded cups, over high-rise leggings cut on a reinforced gusset. The gradient is sublimated into the fabric before a single panel is cut — so it runs unbroken across every seam.</p>
 
   <div class="split">
     <div>
-      <div class="stage light" id="trStage">
+      <div class="stage light hud" id="trStage"><i class="cnr"></i>
+        <div class="grid-bg"></div><div class="sweep"></div>
         <img class="frame on" data-k="front" src="img/bra-front.jpg" alt="Sports bra, front view, lime-to-cyan gradient.">
         <img class="frame" data-k="back" src="img/bra-back.jpg" alt="Sports bra, back view showing the racerback.">
         <img class="frame" data-k="mesh" src="img/bra-mesh.jpg" alt="Sports bra back with the breathable mesh panel.">
@@ -323,7 +378,7 @@
         <img class="frame" data-k="pbra" src="img/bra-pink.jpg" alt="Sports bra in the pink-to-violet colourway.">
         <img class="frame" data-k="pleg" src="img/leg-pink.jpg" alt="Leggings in the pink-to-violet colourway.">
       </div>
-      <div class="controls" id="trBra">
+      <div class="controls">
         <button class="chip" type="button" data-k="front" aria-pressed="true">Bra front</button>
         <button class="chip" type="button" data-k="back" aria-pressed="false">Bra back</button>
         <button class="chip" type="button" data-k="mesh" aria-pressed="false">Mesh panel</button>
@@ -339,7 +394,7 @@
     </div>
 
     <div>
-      <h3>Specification</h3>
+      <h3>// Specification</h3>
       <dl class="spec">
         <div><dt>Composition</dt><dd>88% Polyester / 12% Spandex</dd></div>
         <div><dt>Weight</dt><dd>220–260 GSM</dd></div>
@@ -348,7 +403,7 @@
         <div><dt>Principal seams</dt><dd>4-thread overlock<em>ISO 514</em></dd></div>
         <div><dt>Edges</dt><dd>Coverstitch<em>ISO 406</em></dd></div>
         <div><dt>Chafe-free seams</dt><dd>Flatlock<em>ISO 607</em></dd></div>
-        <div><dt>Inseam</dt><dd>68 cm<em>high rise, medium compression</em></dd></div>
+        <div><dt>Inseam</dt><dd>68 cm<em>high rise · medium compression</em></dd></div>
         <div><dt>Waistband</dt><dd>4 cm jacquard elastic</dd></div>
         <div><dt>Cups</dt><dd>Removable moulded<em>internal pocket</em></dd></div>
         <div><dt>Sizes</dt><dd>XS · S · M · L · XL</dd></div>
@@ -357,63 +412,71 @@
     </div>
   </div>
 
-  <h3 style="margin-top:52px">Fabric build — hover to separate</h3>
+  <h3 style="margin-top:50px">// Fabric build — hover to separate</h3>
   <div class="stack-wrap">
     <div class="stack">
-      <div class="layer l1"><span>Sublimation print</span></div>
-      <div class="layer l2"><span>Performance knit 88/12</span></div>
-      <div class="layer l3 dark"><span>4-way stretch core</span></div>
-      <div class="layer l4"><span>Skin comfort layer</span></div>
+      <div class="layer l1"><span>01 Sublimation print</span></div>
+      <div class="layer l2"><span>02 Performance knit 88/12</span></div>
+      <div class="layer l3"><span>03 4-way stretch core</span></div>
+      <div class="layer l4"><span>04 Skin comfort layer</span></div>
     </div>
   </div>
-  <p class="note">Four layers, in the order the tech pack's exploded diagram sets them out. The print sits on the face; the comfort layer is the only one that touches skin.</p>
+  <p class="note">Four layers, in the order the tech pack's exploded diagram sets them out. The print sits on the face; only layer 04 touches skin.</p>
 </section>
 
-<!-- ══════════════ TENNIS ══════════════ -->
+<!-- ═══ 02 TENNIS ═══ -->
+<div class="cine"><div class="ph" style="background-image:url(img/bg-aurora.jpg)"></div>
+  <div class="cine-txt"><p>// Module 02</p><h4>Designed to move beyond limits</h4></div></div>
+
 <section class="model wrap" id="tennis">
-  <span class="tag">02 · Apparel</span>
+  <div class="idline"><span class="no">02</span><span>Apparel · Tennis</span><span class="rule"></span><span>SKU FLW-TN</span></div>
   <h2>Tennis Collection</h2>
   <p class="sub">A three-layer bra — performance face, ventilation mesh, soft inner — over a skort with built-in shorts. Two colourways: the lime-to-cyan gradient, and white carrying fine lime and cyan lines.</p>
 
   <div class="split">
     <div>
-      <div class="stage" id="tnStage">
+      <div class="stage hud" id="tnStage"><i class="cnr"></i>
+        <div class="grid-bg"></div><div class="sweep"></div>
         <img class="frame on" data-k="bra" src="img/tennis-bra.jpg" alt="Tennis bra with mesh racerback in lime-to-cyan.">
         <img class="frame" data-k="skort" src="img/tennis-skort.jpg" alt="Tennis skort with built-in inner shorts.">
       </div>
-      <div class="controls" id="tnCtl">
+      <div class="controls">
         <button class="chip" type="button" data-k="bra" aria-pressed="true">Bra</button>
         <button class="chip" type="button" data-k="skort" aria-pressed="false">Skort</button>
       </div>
     </div>
     <div>
-      <h3>What makes it different</h3>
+      <h3>// Construction</h3>
       <ul class="feat">
-        <li><b>Three-layer construction.</b> Lightweight performance face, breathable mesh for ventilation, and a soft-touch inner against the skin.</li>
+        <li><b>Three-layer build.</b> Lightweight performance face, breathable mesh for ventilation, soft-touch inner against the skin.</li>
         <li><b>Mesh racerback.</b> Engineered openings across the shoulder blades, where heat builds during a match.</li>
         <li><b>Built-in inner shorts.</b> Coverage under the skort without a second garment.</li>
-        <li><b>Elastic comfort waistband.</b> The FLOW logo sits on the band, secure without gripping.</li>
+        <li><b>Elastic comfort waistband.</b> The FLOW logo sits on the band — secure without gripping.</li>
       </ul>
-      <h3 style="margin-top:34px">Fit for</h3>
+      <h3 style="margin-top:32px">// Deployment</h3>
       <dl class="spec">
         <div><dt>Activities</dt><dd>Tennis · Training · Running · Yoga</dd></div>
         <div><dt>Sizes</dt><dd>XS · S · M · L · XL</dd></div>
         <div><dt>Colourways</dt><dd>Lime to Cyan<em>White with lime &amp; cyan lines</em></dd></div>
       </dl>
-      <p class="note">This collection has no flat sketches or stitch codes in the source deck — it is a concept, not yet a costable tech pack.</p>
+      <p class="note">No flat sketches or stitch codes exist for this collection in the source deck — it is a concept, not yet a costable tech pack.</p>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ BOTTLE ══════════════ -->
+<!-- ═══ 03 BOTTLE ═══ -->
+<div class="cine"><div class="ph" style="background-image:url(img/bg-space.jpg)"></div>
+  <div class="cine-txt"><p>// Module 03</p><h4>Built to perform</h4></div></div>
+
 <section class="model wrap" id="bottle">
-  <span class="tag">03 · Hydration</span>
+  <div class="idline"><span class="no">03</span><span>Hydration</span><span class="rule"></span><span>SKU FLW-BT</span></div>
   <h2>FLOW Bottle</h2>
-  <p class="sub">Triple-wall vacuum insulation with a copper layer, 18/8 stainless inside and out, and a smart base carrying an NFC chip and LED ring. Drag the bottle to turn it.</p>
+  <p class="sub">Triple-wall vacuum insulation with a copper layer, 18/8 stainless inside and out, and a smart base carrying an NFC chip and an LED ring. Live 3D — drag to rotate.</p>
 
   <div class="split">
     <div>
-      <div class="stage" style="padding:0;min-height:440px;display:block">
+      <div class="stage hud" style="padding:0;min-height:440px;display:block"><i class="cnr"></i>
+        <div class="grid-bg"></div>
         <canvas id="bottle3d" aria-label="Rotatable 3D model of the FLOW bottle"></canvas>
       </div>
       <div class="controls" id="btCtl">
@@ -422,10 +485,10 @@
         <button class="chip" type="button" data-c="black" aria-pressed="false">Matte black</button>
         <button class="chip" type="button" data-c="sand" aria-pressed="false">Sand beige</button>
       </div>
-      <p class="hint">Drag to rotate · releases back to auto-spin</p>
+      <p class="hint">Drag to rotate · releases to auto-spin</p>
     </div>
     <div>
-      <h3>Specification</h3>
+      <h3>// Specification</h3>
       <dl class="spec">
         <div><dt>Capacity</dt><dd>750 ml · 1 L</dd></div>
         <div><dt>Body</dt><dd>18/8 stainless (SUS304)<em>inner and outer wall</em></dd></div>
@@ -434,28 +497,33 @@
         <div><dt>Hot retention</dt><dd>up to 18 h</dd></div>
         <div><dt>Lid</dt><dd>3-in-1 multiflow<em>straw · fast flow · chug</em></dd></div>
         <div><dt>Smart base</dt><dd>NFC · 1200 mAh · USB-C<em>IPX7 · RGB status ring</em></dd></div>
-        <div><dt>Battery life</dt><dd>30 days<em>2 h full charge</em></dd></div>
+        <div><dt>Battery</dt><dd>30 days<em>2 h full charge</em></dd></div>
       </dl>
-      <img class="band" style="margin-top:22px" src="img/bottle-colors.jpg" alt="The five bottle colourways: lime/cyan, cyan/deep blue, matte black, sand beige, midnight blue.">
+      <img class="band" style="margin-top:20px" src="img/bottle-colors.jpg" alt="The five bottle colourways: lime/cyan, cyan/deep blue, matte black, sand beige, midnight blue.">
       <p class="note">Retention figures are performance targets from the deck, to be confirmed by production testing.</p>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ SHOE ══════════════ -->
+<!-- ═══ 04 SHOE ═══ -->
+<div class="cine"><div class="ph" style="background-image:url(img/bg-robots.jpg)"></div>
+  <div class="cine-txt"><p>// Module 04</p><h4>Move without limits</h4></div></div>
+
 <section class="model wrap" id="shoe">
-  <span class="tag">04 · Footwear</span>
+  <div class="idline"><span class="no">04</span><span>Footwear</span><span class="rule"></span><span>SKU FLW-R1</span></div>
   <h2>FLOW R1</h2>
   <p class="sub">Engineered jacquard mesh over a supercritical EVA/PEBA midsole, locked down by a TPU midfoot cage. Drag across the shoe to spin it, or jump to the top and outsole views.</p>
 
   <div class="split">
     <div>
-      <div class="spin" id="spin">
+      <div class="spin hud" id="spin"><i class="cnr"></i>
+        <div class="grid-bg"></div>
         <img class="on" data-i="0" src="img/shoe-front.jpg" alt="FLOW R1, front view.">
         <img data-i="1" src="img/shoe-medial.jpg" alt="FLOW R1, medial view.">
         <img data-i="2" src="img/shoe-rear.jpg" alt="FLOW R1, rear view.">
         <img data-i="3" src="img/shoe-side.jpg" alt="FLOW R1, lateral side view.">
-        <span class="deg" id="deg">0°</span>
+        <span class="deg" id="deg">000°</span>
+        <span class="tick">ROT · AXIS Y</span>
       </div>
       <div class="controls" id="shCtl">
         <button class="chip" type="button" data-i="0" aria-pressed="true">Front</button>
@@ -470,7 +538,7 @@
       <p class="hint">Drag left / right to rotate</p>
     </div>
     <div>
-      <h3>Material breakdown</h3>
+      <h3>// Material breakdown</h3>
       <ul class="feat">
         <li><b>Engineered jacquard mesh.</b> Variable weave zones — open where the foot needs air, dense where it needs hold.</li>
         <li><b>TPU hot-melt overlays.</b> Seamless support bonded to the upper instead of stitched onto it.</li>
@@ -478,7 +546,7 @@
         <li><b>Supercritical EVA / PEBA.</b> High-rebound foam for cushioning and energy return.</li>
         <li><b>High-abrasion rubber outsole.</b> Multi-directional traction for gym floors and outdoor runs.</li>
       </ul>
-      <h3 style="margin-top:34px">Sizing</h3>
+      <h3 style="margin-top:32px">// Sizing</h3>
       <dl class="spec">
         <div><dt>EU</dt><dd>36 – 46</dd></div>
         <div><dt>US</dt><dd>4 – 12</dd></div>
@@ -486,25 +554,29 @@
         <div><dt>Design</dt><dd>Unisex</dd></div>
         <div><dt>Insole</dt><dd>Ortholite<em>licensed ingredient brand</em></dd></div>
       </dl>
-      <p class="note">The tongue mark in these renders is not the FLOW wing and the outsole carries nonsense lettering — both are generation artefacts and need the render redone before any external use.</p>
+      <p class="note">The tongue mark in these renders is not the FLOW wing, and the outsole carries nonsense lettering — both are generation artefacts and need the render redone before any external use.</p>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ SOCKS ══════════════ -->
+<!-- ═══ 05 SOCKS ═══ -->
+<div class="cine"><div class="ph" style="background-image:url(img/bg-jungle.jpg)"></div>
+  <div class="cine-txt"><p>// Module 05</p><h4>Engineered to flow</h4></div></div>
+
 <section class="model wrap" id="socks">
-  <span class="tag">05 · Accessories</span>
+  <div class="idline"><span class="no">05</span><span>Accessories</span><span class="rule"></span><span>SKU FLW-AK</span></div>
   <h2>FLOW Airknit</h2>
   <p class="sub">Circular-knit performance socks with a seamless toe, an anatomical Y heel and targeted arch compression. Silver-ion yarn carries the odour control.</p>
 
   <div class="split">
     <div>
-      <div class="stage" style="min-height:380px">
+      <div class="stage hud" style="min-height:380px"><i class="cnr"></i>
+        <div class="grid-bg"></div><div class="sweep"></div>
         <img src="img/sock.jpg" alt="FLOW Airknit performance sock in white and lime, showing mesh zones and arch compression.">
       </div>
     </div>
     <div>
-      <h3>Specification</h3>
+      <h3>// Specification</h3>
       <dl class="spec">
         <div><dt>Composition</dt><dd>55% Nylon 6.6 · 25% Coolmax<em>15% Elastane (Lycra) · 5% Silver ion yarn</em></dd></div>
         <div><dt>Weight</dt><dd>28–35 g per pair<em>ankle height</em></dd></div>
@@ -515,42 +587,86 @@
         <div><dt>Cushion zones</dt><dd>Heel · Forefoot</dd></div>
         <div><dt>Sizes</dt><dd>EU 36–38 · 39–42 · 43–46</dd></div>
       </dl>
-      <img class="band" style="margin-top:22px" src="img/sock-colors.jpg" alt="The four sock colourways: white/lime, lime/black, black/lime, cyan/lime.">
+      <img class="band" style="margin-top:20px" src="img/sock-colors.jpg" alt="The four sock colourways: white/lime, lime/black, black/lime, cyan/lime.">
       <p class="note">Coolmax and Lycra are licensed ingredient brands — naming them on product or packaging needs a supply and trademark agreement.</p>
     </div>
   </div>
 </section>
 
+</main>
+
 <footer class="wrap">
-  <p>Built from FLOW.pdf. Every specification on this page is taken from the deck's own tech pack pages; the flats, renders and colourway strips are cropped from it directly.</p>
-  <p>Colour codes are the one thing not shown here: the deck labels hex values as Pantone references and gives three different forms across pages 9, 15 and 17, so no colourway on this page can claim a matched reference yet.</p>
+  <p>Built from FLOW.pdf. Every specification here is taken from the deck's own tech pack pages; the flats, renders, colourway strips and campaign backdrops are cropped from it directly.</p>
+  <p>Colour codes are the one thing missing: the deck labels hex values as Pantone references and gives three different forms across pages 9, 15 and 17 — so no colourway on this page can claim a matched reference yet.</p>
 </footer>
 
 <script>
 (function(){
   "use strict";
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- generic frame switcher ---------- */
-  function wire(stageId, groups, attr){
-    var stage = document.getElementById(stageId);
-    if(!stage) return;
-    var frames = stage.querySelectorAll(".frame");
-    var btns = [];
-    groups.forEach(function(id){
-      var g = document.getElementById(id);
-      if(g) Array.prototype.push.apply(btns, g.querySelectorAll("button"));
-    });
-    function show(k){
-      frames.forEach(function(f){ f.classList.toggle("on", f.dataset[attr] === k); });
-      btns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset[attr] === k)); });
-    }
-    btns.forEach(function(b){
-      b.addEventListener("click", function(){ show(b.dataset[attr]); });
-    });
-  }
-  // the training set has two button rows sharing one stage
+  /* ══ flow field — the brand's own line pattern, in motion ══ */
   (function(){
-    var stage = document.getElementById("trStage");
+    var cv = document.getElementById("field");
+    if(!cv || reduced) return;
+    var ctx = cv.getContext("2d");
+    if(!ctx) return;
+    var W, H, pts = [], N = 0, t = 0;
+
+    function seed(){
+      W = cv.width = Math.floor(window.innerWidth);
+      H = cv.height = Math.floor(window.innerHeight);
+      N = Math.max(40, Math.min(150, Math.floor(W * H / 14000)));
+      pts = [];
+      for(var i = 0; i < N; i++){
+        pts.push({ x: Math.random() * W, y: Math.random() * H, life: Math.random() * 260 });
+      }
+      ctx.fillStyle = "#030608";
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // analytic flow field — smooth, organic, no noise library needed
+    function angleAt(x, y, tt){
+      return Math.sin(x * 0.0016 + tt) * 1.5
+           + Math.cos(y * 0.0021 - tt * 0.8) * 1.5
+           + Math.sin((x + y) * 0.0009 + tt * 0.4);
+    }
+
+    function step(){
+      t += 0.0016;
+      ctx.fillStyle = "rgba(3,6,8,0.055)";
+      ctx.fillRect(0, 0, W, H);
+      ctx.lineWidth = 1;
+      for(var i = 0; i < N; i++){
+        var p = pts[i];
+        var a = angleAt(p.x, p.y, t);
+        var nx = p.x + Math.cos(a) * 1.5;
+        var ny = p.y + Math.sin(a) * 1.5;
+        var mix = (Math.sin(a) + 1) / 2;
+        ctx.strokeStyle = "rgba(" +
+          Math.round(0 + mix * 205) + "," +
+          Math.round(212 + mix * 28) + "," +
+          Math.round(230 - mix * 230) + ",0.38)";
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(nx, ny);
+        ctx.stroke();
+        p.x = nx; p.y = ny; p.life--;
+        if(p.life < 0 || p.x < 0 || p.x > W || p.y < 0 || p.y > H){
+          p.x = Math.random() * W; p.y = Math.random() * H; p.life = 160 + Math.random() * 260;
+        }
+      }
+      requestAnimationFrame(step);
+    }
+    seed();
+    var rt;
+    window.addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(seed, 220); });
+    step();
+  })();
+
+  /* ══ frame switchers ══ */
+  function switcher(stageId){
+    var stage = document.getElementById(stageId);
     if(!stage) return;
     var frames = stage.querySelectorAll(".frame");
     var btns = stage.parentNode.querySelectorAll(".controls button");
@@ -559,10 +675,11 @@
       btns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.k === k)); });
     }
     btns.forEach(function(b){ b.addEventListener("click", function(){ show(b.dataset.k); }); });
-  })();
-  wire("tnStage", ["tnCtl"], "k");
+  }
+  switcher("trStage");
+  switcher("tnStage");
 
-  /* ---------- shoe spinner ---------- */
+  /* ══ shoe spinner ══ */
   (function(){
     var box = document.getElementById("spin");
     if(!box) return;
@@ -573,28 +690,34 @@
     var extra = [document.getElementById("shTop"), document.getElementById("shSole")];
     var N = imgs.length, idx = 0, dragging = false, startX = 0, startIdx = 0;
 
+    function pad(n){ return ("000" + n).slice(-3); }
     function paint(){
       imgs.forEach(function(im){ im.classList.toggle("on", Number(im.dataset.i) === idx); });
       btns.forEach(function(b){ b.setAttribute("aria-pressed", String(Number(b.dataset.i) === idx)); });
-      extra.forEach(function(b){ if(b) b.setAttribute("aria-pressed","false"); });
-      if(deg) deg.textContent = Math.round(idx * (360 / N)) + "°";
+      extra.forEach(function(b){ if(b) b.setAttribute("aria-pressed", "false"); });
+      if(deg) deg.textContent = pad(Math.round(idx * (360 / N))) + "°";
     }
     function setIdx(i){ idx = ((i % N) + N) % N; paint(); }
 
+    function clearExtra(){
+      var tmp = box.querySelector("img.extra");
+      if(tmp) tmp.classList.remove("on");
+    }
     box.addEventListener("pointerdown", function(e){
+      clearExtra();
       dragging = true; startX = e.clientX; startIdx = idx;
-      box.setPointerCapture && box.setPointerCapture(e.pointerId);
+      if(box.setPointerCapture) box.setPointerCapture(e.pointerId);
     });
     box.addEventListener("pointermove", function(e){
       if(!dragging) return;
-      var step = Math.max(26, box.clientWidth / (N * 1.7));
-      setIdx(startIdx + Math.round((e.clientX - startX) / step));
+      var stepPx = Math.max(26, box.clientWidth / (N * 1.7));
+      setIdx(startIdx + Math.round((e.clientX - startX) / stepPx));
     });
     ["pointerup","pointercancel","pointerleave"].forEach(function(ev){
       box.addEventListener(ev, function(){ dragging = false; });
     });
     btns.forEach(function(b){
-      b.addEventListener("click", function(){ setIdx(Number(b.dataset.i)); });
+      b.addEventListener("click", function(){ clearExtra(); setIdx(Number(b.dataset.i)); });
     });
 
     function swapTo(src, btn){
@@ -608,27 +731,21 @@
       tmp.src = src;
       tmp.alt = btn.textContent + " of the FLOW R1.";
       tmp.classList.add("on");
-      btns.forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      btns.forEach(function(b){ b.setAttribute("aria-pressed", "false"); });
       extra.forEach(function(b){ if(b) b.setAttribute("aria-pressed", String(b === btn)); });
-      if(deg) deg.textContent = btn.textContent;
-    }
-    function clearExtra(){
-      var tmp = box.querySelector("img.extra");
-      if(tmp) tmp.classList.remove("on");
+      if(deg) deg.textContent = btn.textContent.toUpperCase();
     }
     if(extra[0]) extra[0].addEventListener("click", function(){ swapTo("img/shoe-top.jpg", extra[0]); });
     if(extra[1]) extra[1].addEventListener("click", function(){ swapTo("img/shoe-outsole.jpg", extra[1]); });
-    btns.forEach(function(b){ b.addEventListener("click", clearExtra); });
-    box.addEventListener("pointerdown", clearExtra);
     paint();
   })();
 
-  /* ---------- three.js bottle ---------- */
+  /* ══ three.js bottle ══ */
   (function(){
     var canvas = document.getElementById("bottle3d");
     if(!canvas) return;
     if(typeof THREE === "undefined"){
-      canvas.outerHTML = '<div class="three-fallback">3D view unavailable — the renderer could not load.</div>';
+      canvas.outerHTML = '<div class="fallback">3D MODULE OFFLINE — renderer unavailable.</div>';
       return;
     }
 
@@ -647,13 +764,12 @@
       lg.addColorStop(0, pair[1]);
       lg.addColorStop(1, pair[0]);
       g.fillStyle = lg; g.fillRect(0, 0, 16, 256);
-      // faint horizontal wave lines, the way the real bottle is decorated
-      g.globalAlpha = 0.16; g.fillStyle = "#ffffff";
+      g.globalAlpha = 0.17; g.fillStyle = "#ffffff";
       for(var y = 8; y < 256; y += 13){ g.fillRect(0, y, 16, 1.4); }
-      var t = new THREE.CanvasTexture(c);
-      t.wrapS = THREE.RepeatWrapping;
-      t.needsUpdate = true;
-      return t;
+      var tex = new THREE.CanvasTexture(c);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.needsUpdate = true;
+      return tex;
     }
 
     var scene = new THREE.Scene();
@@ -664,53 +780,47 @@
     try{
       renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     }catch(err){
-      canvas.outerHTML = '<div class="three-fallback">3D view unavailable in this browser.</div>';
+      canvas.outerHTML = '<div class="fallback">3D MODULE OFFLINE — WebGL unavailable.</div>';
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-    // ---- bottle silhouette, revolved ----
     var profile = [];
     function p(x, y){ profile.push(new THREE.Vector2(x, y)); }
     p(0.00, -3.30); p(1.28, -3.30); p(1.42, -3.16); p(1.46, -2.92);
     p(1.46,  1.26); p(1.44,  1.62); p(1.33,  1.96); p(1.10,  2.28);
     p(0.84,  2.56); p(0.70,  2.82); p(0.66,  3.08);
-    var bodyGeo = new THREE.LatheGeometry(profile, 96);
 
     var bodyMat = new THREE.MeshStandardMaterial({
-      map: gradientTexture(PALETTE.lime),
-      metalness: 0.42, roughness: 0.34
+      map: gradientTexture(PALETTE.lime), metalness: 0.44, roughness: 0.32
     });
-    var body = new THREE.Mesh(bodyGeo, bodyMat);
+    var body = new THREE.Mesh(new THREE.LatheGeometry(profile, 96), bodyMat);
 
-    var capMat = new THREE.MeshStandardMaterial({ color: 0x14181b, metalness: 0.5, roughness: 0.52 });
-    var cap = new THREE.Mesh(new THREE.CylinderGeometry(0.80, 0.74, 0.74, 48), capMat);
+    var darkMat = new THREE.MeshStandardMaterial({ color: 0x14181b, metalness: 0.5, roughness: 0.5 });
+    var cap = new THREE.Mesh(new THREE.CylinderGeometry(0.80, 0.74, 0.74, 48), darkMat);
     cap.position.y = 3.40;
-
-    var collar = new THREE.Mesh(new THREE.CylinderGeometry(0.70, 0.70, 0.18, 48), capMat);
+    var collar = new THREE.Mesh(new THREE.CylinderGeometry(0.70, 0.70, 0.18, 48), darkMat);
     collar.position.y = 3.02;
-
-    var loop = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.075, 12, 40, Math.PI * 1.25), capMat);
+    var loop = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.075, 12, 40, Math.PI * 1.25), darkMat);
     loop.position.set(0.32, 3.62, 0);
     loop.rotation.set(Math.PI / 2, 0, -0.5);
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(1.30, 1.22, 0.40, 48), darkMat);
+    base.position.y = -3.48;
 
     var ringMat = new THREE.MeshBasicMaterial({ color: 0x35e6ff });
     var ring = new THREE.Mesh(new THREE.TorusGeometry(1.47, 0.045, 10, 72), ringMat);
     ring.position.y = -2.62;
     ring.rotation.x = Math.PI / 2;
 
-    var base = new THREE.Mesh(new THREE.CylinderGeometry(1.30, 1.22, 0.40, 48), capMat);
-    base.position.y = -3.48;
-
     var bottle = new THREE.Group();
-    bottle.add(body, cap, collar, loop, ring, base);
+    bottle.add(body, cap, collar, loop, base, ring);
     bottle.rotation.x = 0.06;
     scene.add(bottle);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.52));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     var key = new THREE.DirectionalLight(0xffffff, 1.05); key.position.set(4, 6, 7);
-    var fill = new THREE.DirectionalLight(0x9fe8ff, 0.42); fill.position.set(-6, 1, 4);
-    var rim = new THREE.DirectionalLight(0xcdf000, 0.40); rim.position.set(-2, -4, -6);
+    var fill = new THREE.DirectionalLight(0x9fe8ff, 0.45); fill.position.set(-6, 1, 4);
+    var rim = new THREE.DirectionalLight(0xcdf000, 0.42); rim.position.set(-2, -4, -6);
     scene.add(key, fill, rim);
 
     function resize(){
@@ -724,14 +834,12 @@
     var spin = true, dragging = false, lastX = 0, vel = 0.0042;
     canvas.addEventListener("pointerdown", function(e){
       dragging = true; spin = false; lastX = e.clientX;
-      canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+      if(canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
     });
     canvas.addEventListener("pointermove", function(e){
       if(!dragging) return;
       var d = (e.clientX - lastX) * 0.0092;
-      bottle.rotation.y += d;
-      vel = d;
-      lastX = e.clientX;
+      bottle.rotation.y += d; vel = d; lastX = e.clientX;
     });
     ["pointerup","pointercancel","pointerleave"].forEach(function(ev){
       canvas.addEventListener(ev, function(){
@@ -741,7 +849,6 @@
       });
     });
 
-    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     function frame(){
       if(spin && !reduced) bottle.rotation.y += vel;
       renderer.render(scene, camera);
