@@ -276,12 +276,12 @@
     <div class="brandbar"></div>
     <p class="kicker">FLOW · Energy in Motion</p>
     <h1>ملف توريد FLOW</h1>
-    <p class="standfirst">قراءة كاملة للـ31 صفحة في <span class="mono">FLOW.pdf</span>: جرد كل الموديلات واللونيات، المواصفات المستخرجة من التك-باك، خلل واحد يجب إصلاحه قبل مخاطبة أي مصنع، قائمة مصانع مرشّحة، ورسالة طلب تسعير جاهزة.</p>
+    <p class="standfirst">قراءة كاملة للـ31 صفحة في <span class="mono">FLOW.pdf</span>، وتدقيق لما فيها: جرد الموديلات واللونيات، أخطاء يجب إصلاحها قبل مخاطبة أي مصنع أو عرض الملف خارجياً، المواصفات المستخرجة من التك-باك، مصانع مرشّحة، ورسالة طلب تسعير جاهزة.</p>
     <div class="mast-meta">
       <span>المصدر <b>FLOW.pdf · 31 صفحة</b></span>
       <span>محتوى <b>28 صفحة · 3 فارغة</b></span>
       <span>طبقة نص <b>صفر — كلها صور</b></span>
-      <span>التاريخ <b>27 سبتمبر 2026</b></span>
+      <span>نتائج التدقيق <b>14 خطأ إملائي · 5 تناقضات · 4 مخاطر</b></span>
     </div>
   </header>
 
@@ -337,8 +337,124 @@
   </section>
 
   <section>
-    <p class="eyebrow">أوقف كل شيء</p>
-    <h2>خلل يمنع التصنيع</h2>
+    <p class="eyebrow">التدقيق</p>
+    <h2>أخطاء مطبوعة داخل الصور</h2>
+
+    <p>صفحتا التنس (<span class="mono">20</span> و<span class="mono">22</span>) مولّدتان بالذكاء الاصطناعي، والنصّ فيهما <strong>مشوّه ومحروق داخل الصورة</strong>. لا يمكن تصحيحه بتحرير نصّ — الصفحتان تحتاجان إعادة إنتاج.</p>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>الصفحة</th><th>المكتوب</th><th>الصحيح</th></tr></thead>
+        <tbody>
+          <tr><td class="moq">22</td><td class="mono bad">DETAILS IN 8D</td><td class="mono">DETAILS IN 3D</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">Periurmance Fabric</td><td class="mono">Performance Fabric</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">Enhenced Ventiiation</td><td class="mono">Enhanced Ventilation</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">maisture-wicking</td><td class="mono">moisture-wicking</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">keeps you tresh</td><td class="mono">keeps you fresh</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">Ultre-lightweight</td><td class="mono">Ultra-lightweight</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">maximum freeciom</td><td class="mono">maximum freedom</td></tr>
+          <tr><td class="moq">22</td><td class="mono bad">Imer Shorts · contidence</td><td class="mono">Inner Shorts · confidence</td></tr>
+          <tr><td class="moq">20، 22</td><td class="mono bad">Scuipted / Sctupted</td><td class="mono">Sculpted</td></tr>
+          <tr><td class="moq">20، 22</td><td class="mono bad">Breathabie Mesh Back</td><td class="mono">Breathable Mesh Back</td></tr>
+          <tr><td class="moq">20، 22</td><td class="mono bad">airtlow / airtiow</td><td class="mono">airflow</td></tr>
+          <tr><td class="moq">20، 22</td><td class="mono bad">tiexible comiort</td><td class="mono">flexible comfort</td></tr>
+          <tr><td class="moq">20</td><td class="mono bad">Buiit-In Inner Shorts</td><td class="mono">Built-In Inner Shorts</td></tr>
+          <tr><td class="moq">20</td><td class="mono bad">For coverage. confidence. and</td><td class="mono">For coverage, confidence, and</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <img src="assets/audit-typos.jpg" alt="تكبير لعمود النصّ في صفحة 22 يُظهر الأخطاء الإملائية المطبوعة داخل الصورة.">
+      <figcaption>ص 22 بتكبير 300 نقطة/بوصة — الأخطاء محروقة في الصورة نفسها.</figcaption>
+    </figure>
+
+    <p><strong>الصفحات النظيفة:</strong> <span class="mono">15، 16، 17، 25، 26، 29، 30</span>. نصّها إنجليزي سليم ومحترف — أنتِجت بطريقة مختلفة عن صفحتَي التنس.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">التدقيق</p>
+    <h2>تناقضات فنية</h2>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>أين</th><th>التناقض</th><th>لماذا يهمّ</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="moq">ص 4 مقابل 15/17</td>
+            <td><span class="mono">SEAMLESS COMFORT</span> في مواصفات القماش، بينما البناء <span class="mono">Flatlock + Overlock</span> — أي درزات مخيطة.</td>
+            <td><strong>الأخطر.</strong> مصنع يقرأ «seamless» قد يسعّر خطّ حياكة دائرية بلا خياطة — وهو منتج مختلف كلياً وسعر مختلف كلياً.</td>
+          </tr>
+          <tr>
+            <td class="moq">ص 4 مقابل 15/16/17</td>
+            <td><span class="mono">Circular Jacquard Knit</span> مقابل <span class="mono">Premium Performance Knit</span>.</td>
+            <td>الجاكار بنية منسوجة بنقشة، والأدائي سادة. قماشان مختلفان بسعرين مختلفين.</td>
+          </tr>
+          <tr>
+            <td class="moq">ص 9، 15، 18</td>
+            <td>الرسومات المسطّحة مكتوب عليها <span class="mono">SIZE: XG</span>، وجدول المقاسات <span class="mono">XS–XL</span>.</td>
+            <td>الرسم المسطّح هو ما يُقاس عليه الباترون. <span class="mono">XG</span> تسمية برتغالية/برازيلية لا تقابل شيئاً في جدولك.</td>
+          </tr>
+          <tr>
+            <td class="moq">ص 19–22</td>
+            <td>مجموعة التنس بلا رسومات مسطّحة ولا أكواد خياطة ولا أكواد ألوان.</td>
+            <td>غير قابلة للتسعير. المصنع سيخمّن أو يرفض.</td>
+          </tr>
+          <tr>
+            <td class="moq">ص 24</td>
+            <td>اللونية الزرقاء في صورة حملة واحدة، بلا رسم ولا كود.</td>
+            <td>ليست منتجاً بعد — هي صورة.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">التدقيق</p>
+    <h2>مخاطر قانونية</h2>
+
+    <div class="caution">
+      <p class="tag">راجعها مع محامٍ قبل أي عرض خارجي</p>
+      <p>هذه ليست ملاحظات تصميم. كلٌّ منها التزام أو ادّعاء قد يُساءل عنه.</p>
+    </div>
+
+    <h3>١. مقارنة بعلامة منافسة بالاسم</h3>
+    <p>صفحة 25 تضع <span class="mono">FLOW 48 ساعة</span> مقابل <span class="mono">STANLEY® 24 ساعة</span>، وتحتها «اختُبر في ظروف قياسية».</p>
+
+    <figure>
+      <img src="assets/audit-stanley.jpg" alt="مربّع مقارنة احتفاظ الثلج في صفحة 25: FLOW حتى 48 ساعة مقابل STANLEY حتى 24 ساعة.">
+      <figcaption>ص 25 — مقارنة مباشرة بعلامة مسجّلة، بعلامة ® وكل شيء.</figcaption>
+    </figure>
+
+    <p>المنتج لم يُصنَّع بعد، فلا يوجد اختبار. والإعلان المقارن الذي يسمّي منافساً يتطلّب بيانات اختبار موثّقة في معظم الأسواق، وإلّا كان قابلاً للمقاضاة. وعبارة «النتائج قد تختلف» لا تحمي من ادّعاء رقمي محدّد. <strong>احذف المربّع كاملاً</strong>، أو استبدله برقم FLOW وحده بلا مقارنة.</p>
+
+    <h3>٢. شعار ليس شعارك على الحذاء</h3>
+    <p>لسان الحذاء في صفحة 29 يحمل علامة سوداء على شكل فراشة متشابكة — وهي <strong>ليست جناح FLOW</strong>، وتشبه إلى حدّ بعيد شعار علامة رياضية مسجّلة أخرى.</p>
+
+    <figure>
+      <img src="assets/audit-shoe.jpg" alt="تكبير شديد للسان حذاء FLOW R1 يُظهر علامة متشابكة ليست شعار FLOW.">
+      <figcaption>ص 29، «FRONT VIEW» بتكبير 600 نقطة/بوصة.</figcaption>
+    </figure>
+
+    <p>للتوضيح: العلامة على <em>جانب</em> الحذاء سليمة — هي جناح FLOW بثلاث ضربات، بالأسود. المشكلة في اللسان وحده. ونعل الحذاء الخارجي يحمل حروفاً عشوائية بلا معنى، وهي أيضاً من تشويه التوليد.</p>
+
+    <h3>٣. ادّعاءات مطلقة والتزامات مفتوحة</h3>
+    <ul class="plain">
+      <li><span class="mono">LIFETIME WARRANTY</span> (ص 25) — التزام مالي مفتوح بلا سقف زمني. صِغه بعدد سنوات محدّد.</li>
+      <li><span class="mono">100% LEAK PROOF</span> (ص 25، 26) — ادّعاء مطلق. «مصمّم لمنع التسرّب» أسلم.</li>
+      <li><span class="mono">built to last a lifetime</span> (ص 26) — نفس المشكلة.</li>
+      <li><span class="mono">UV PROTECTION</span> (ص 4، 15) — ادّعاء صحي على الملابس. لا يجوز ذكره على البطاقة بلا تقرير اختبار <span class="mono">UPF</span> برقم.</li>
+      <li><span class="mono">ANTI-ODOR</span> — إن كان بتقنية الفضة، فبعض الأسواق تنظّمها كمبيد حيوي (BPR في الاتحاد الأوروبي).</li>
+    </ul>
+
+    <h3>٤. علامات أطراف ثالثة</h3>
+    <p>العرض يستعمل <span class="mono">Coolmax®</span> و<span class="mono">Lycra®</span> (ص 30) و<span class="mono">Ortholite®</span> (ص 29). هذه علامات مكوّنات مرخّصة — لا يحقّ لك ذكرها على المنتج أو التغليف إلّا إذا اشتريت المادة فعلاً من المالك ووقّعت اتفاقية استخدام العلامة. وشارتا <span class="mono">App Store</span> و<span class="mono">Google Play</span> (ص 25) لتطبيق غير موجود بعد.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">التدقيق</p>
+    <h2>أكواد الألوان</h2>
 
     <div class="caution">
       <p class="tag">أصلح هذا قبل مخاطبة أي مصنع</p>
@@ -367,7 +483,7 @@
       <li><strong>وثبّت نقطتَي التدرّج فقط</strong> — البداية والنهاية — ودع المصنع يبني الانتقال بينهما. تحديد كل نقطة في التدرّج يستحيل ضبطه.</li>
     </ul>
 
-    <p class="note">خلل أصغر في نفس السياق: الرسومات المسطّحة مكتوب عليها <span class="mono">SIZE: XG</span> بينما جدول المقاسات <span class="mono">XS–XL</span>. وحّدهما قبل الإرسال — الرسم المسطّح يُقاس عليه الباترون.</p>
+    <p class="note">هذا البند وحده يفصل بين عرض يبدو جاهزاً وعرض هو جاهز فعلاً. كل ما عداه في هذا الملف قابل للإصلاح في ساعة؛ هذا يحتاج قراراً منك على كل لونية.</p>
   </section>
 
   <section>
@@ -599,7 +715,8 @@ Thank you,
   </section>
 
   <footer>
-    <p>أُعدّ هذا الملف من قراءة <span class="mono">FLOW.pdf</span> صفحةً صفحة — 31 صفحة، 28 منها فيها محتوى، وكلّها صور بلا طبقة نص. المواصفات منقولة من صفحات 4 و15 و16 و17 و22. أسماء المصانع وأرقام الحدّ الأدنى من نتائج بحث على الإنترنت ولم يجرِ التحقق منها مباشرةً — راجع خطوات التحقق أعلاه قبل الالتزام بأي مورّد.</p>
+    <p>أُعدّ هذا الملف من قراءة <span class="mono">FLOW.pdf</span> صفحةً صفحة — 31 صفحة، 28 منها فيها محتوى، وكلّها صور بلا طبقة نص. المواصفات والأخطاء منقولة من الصفحات نفسها بتكبير يصل إلى 600 نقطة/بوصة، وصور الإثبات أعلاه مقتطعة من الملف مباشرة.</p>
+    <p>أسماء المصانع وأرقام الحدّ الأدنى من نتائج بحث على الإنترنت ولم يجرِ التحقق منها مباشرةً — راجع خطوات التحقق قبل الالتزام بأي مورّد. والملاحظات القانونية قراءة مهنية لما في الملف، لا استشارة قانونية؛ اعرضها على محامٍ قبل أي استخدام خارجي.</p>
   </footer>
 
 </div>
